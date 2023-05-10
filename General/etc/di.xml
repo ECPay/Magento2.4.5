@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ecpay\General\Api\LogisticInterface" type="Ecpay\General\Controller\Api\Logistic"/>
+    <preference for="Ecpay\General\Api\InvoiceInterface" type="Ecpay\General\Controller\Api\Invoice"/>
+
+    <!-- Disabled magento authorization plugin -->
+    <type name="Magento\Sales\Model\ResourceModel\Order">
+        <plugin name="authorization" disabled="true" />
+        <plugin name="ecpayAuthorization" type="Ecpay\General\Model\ResourceModel\Plugin\Sales\Order\Authorization" sortOrder="1" disabled="false" />
+    </type>
+
+    <!-- Plugin used for disable payment method in frontend -->
+    <type name="Magento\Payment\Model\MethodList">
+        <plugin name="ecpayDisablePayment" type="Ecpay\General\Plugin\Model\Method\MethodAvailable" disabled="false" />
+    </type>
+</config>

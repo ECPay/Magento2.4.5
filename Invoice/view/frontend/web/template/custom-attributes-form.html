@@ -1,0 +1,69 @@
+<div class="step-title" data-role="title" data-bind="i18n: 'Ecpay Invoice Infomation'">Ecpay Invoice Infomation</div>
+<form  id="ecpay-invoice-form" class="form form-shipping-address">
+    <div class="fieldset">
+        <!-- ko foreach: getRegion('custom-checkout-form-fields') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+        <div class="field _required" style="margin: 0 0 20px;" data-bind="value: currentInvoiceType">
+            <label class="label">
+                <span data-bind="i18n: 'Invoice Type'">Invoice Type</span>
+            </label>
+            <select class="control" name="ecpay_invoice_type" id="ecpay_invoice_type" data-bind="value: currentInvoiceType, event:{ change: selectInvoiceType }">
+                <!-- ko i18n: 'Individual' --><!-- /ko -->
+                <!-- ko i18n: 'Donation' --><!-- /ko -->
+                <!-- ko i18n: 'Company' --><!-- /ko -->
+                <!-- ko foreach: invoiceTypes -->
+                <option data-bind="visible: active, text: $t(name), value: value"></option>
+                <!-- /ko -->
+            </select>
+        </div>
+
+        <div class="field _required" style="margin: 0 0 20px;" data-bind="visible: showCarruerType">
+            <label class="label">
+                <span data-bind="i18n: 'Carrier Type'">Carrier Type</span>
+            </label>
+            <select class="control" name="ecpay_invoice_carruer_type" id="ecpay_invoice_carruer_type" data-bind="value: currentCarruerType, event:{ change: selectCarruerType }">
+                <!-- ko i18n: 'Paper Invoice' --><!-- /ko -->
+                <!-- ko i18n: 'Cloud Invoice' --><!-- /ko -->
+                <!-- ko i18n: 'Natural Person Certificate' --><!-- /ko -->
+                <!-- ko i18n: 'Mobile Barcode' --><!-- /ko -->
+                <!-- ko foreach: carruerTypes -->
+                <option data-bind="visible: active, text: $t(name), value: value"></option>
+                <!-- /ko -->
+            </select>
+        </div>
+
+        <div class="field _required" style="margin: 0 0 20px;" data-bind="visible: showCustomerCompany">
+            <label class="label">
+                <span data-bind="i18n: 'Company Name'"></span>
+            </label>
+            <input type="text" class="control" name="ecpay_invoice_customer_company" id="ecpay_invoice_customer_company" data-bind="value: customer_company">
+            <div class="field-error" id="customer_company_error"></div>
+        </div>
+        <div class="field _required" style="margin: 0 0 20px;" data-bind="visible: showCustomerIdentifier">
+            <label class="label">
+                <span data-bind="i18n: 'Uniform Numbers'">Uniform Numbers</span>
+            </label>
+            <input type="text" class="control" name="ecpay_invoice_customer_identifier" id="ecpay_invoice_customer_identifier" data-bind="value: customer_identifier">
+            <div class="field-error" id="customer_identifier_error"></div>
+        </div>
+
+        <div class="field _required" style="margin: 0 0 20px;" data-bind="visible: showLoveCode">
+            <label class="label">
+                <span data-bind="i18n: 'Donation Code'">Donation Code</span>
+            </label>
+
+            <input type="text" class="control" name="ecpay_invoice_love_code" id="ecpay_invoice_love_code" data-bind="value: love_code">
+            <div class="field-error" id="love_code_error"></div>
+        </div>
+
+        <div class="field _required" style="margin: 0 0 20px;" data-bind="visible: showCarruerNum">
+            <label class="label">
+                <span data-bind="i18n: 'Carrier Code'">Carrier Code</span>
+            </label>
+            <input type="text" class="control" name="ecpay_invoice_carruer_num" id="ecpay_invoice_carruer_num" data-bind="value: carruer_num">
+            <div class="field-error" id="carruer_num_error"></div>
+        </div>
+    </div>
+</form>
+<div class="step-title" data-role="title" data-bind="i18n: 'Shipping Infomation', visible: !is_logged_in">Shipping Infomation</div>

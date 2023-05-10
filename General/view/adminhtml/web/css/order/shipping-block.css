@@ -1,0 +1,23 @@
+.shipping-info label {
+    display: inline-block;
+    width: 150px;
+}
+.order-view-custom-block {
+    position: relative;
+}
+.shipping-msg {
+    position: absolute;
+    right: 0;
+}
+.shipping-msg .msg {
+    margin-bottom: 2rem;
+    padding: 1rem 2rem 1rem 2rem;
+    border-radius: 4px;
+    color: #514943;
+}
+.shipping-msg.error .msg {
+    background-color: #ffc5c5;
+}
+.shipping-msg.success .msg {
+    background-color: #c5ffd3;
+}

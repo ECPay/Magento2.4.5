@@ -1,0 +1,59 @@
+<!--@subject {{trans "Your %store_name order payment info" store_name=$store.frontend_name}} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<table style="width:100%">
+    <tr class="email-summary">
+        <td>
+            <h1>{{trans 'Your Order <span class="no-link">#%real_order_id</span>' real_order_id=$real_order_id |raw}}</h1>
+            <p>{{trans 'Placed on <span class="no-link">%created_at</span>' created_at=$created_at_formatted |raw}}</p>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <h3>{{var payment_type}} {{trans "Payment info"}}</h3>
+        <table class="order-details">
+            <tr>
+                <td class="td" scope="col" style="color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px;text-align: left">
+                    {{trans "Barcode one"}}
+                </td>
+                <td class="td" scope="col" style="color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px;text-align: left">
+                    {{var payment_info.barcode_one}}
+                </td>
+            </tr>
+            <tr>
+                <td class="td" scope="col" style="color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px;text-align: left">
+                    {{trans "Barcode two"}}
+                </td>
+                <td class="td" scope="col" style="color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px;text-align: left">
+                    {{var payment_info.barcode_two}}
+                </td>
+            </tr>
+            <tr>
+                <td class="td" scope="col" style="color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px;text-align: left">
+                    {{trans "Barcode three"}}
+                </td>
+                <td class="td" scope="col" style="color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px;text-align: left">
+                    {{var payment_info.barcode_three}}
+                </td>
+            </tr>
+            <tr>
+                <td class="td" scope="col" style="color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px;text-align: left">
+                    {{trans "Grand total"}}
+                </td>
+                <td class="td" scope="col" style="color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px;text-align: left">
+                    {{var total_amount}} 元
+                </td>
+            </tr>
+            <tr>
+                <td class="td" scope="col" style="color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px;text-align: left">
+                    {{trans "Payment deadline"}}
+                </td>
+                <td class="td" scope="col" style="color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px;text-align: left">
+                    {{var payment_info.expire_date}}
+                </td>
+            </tr>
+        </table>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

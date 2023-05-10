@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="ecpay_payment_info_atm_template" label="Ecpay Payment Email" file="ecpay_payment_info_atm_template.html" type="html" module="Ecpay_General" area="frontend"/>
+    <template id="ecpay_payment_info_cvs_template" label="Ecpay Payment Email" file="ecpay_payment_info_cvs_template.html" type="html" module="Ecpay_General" area="frontend"/>
+    <template id="ecpay_payment_info_barcode_template" label="Ecpay Payment Email" file="ecpay_payment_info_barcode_template.html" type="html" module="Ecpay_General" area="frontend"/>
+</config>

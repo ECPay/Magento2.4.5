@@ -1,0 +1,14 @@
+.block-ecpay-thankyou {
+    margin-bottom: 20px;
+}
+
+.block-ecpay-thankyou .block-title {
+    border-bottom: 1px solid #c6c6c6;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    font-size: 2rem;
+}
+
+.block-ecpay-thankyou .block-content .box .box-content {
+    line-height: 24px;
+}

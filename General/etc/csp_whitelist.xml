@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp/etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="form-action">
+            <values>
+                <value id="expressMapStage" type="host">https://logistics-stage.ecpay.com.tw/Express/map</value>
+                <value id="expressMap" type="host">https://logistics.ecpay.com.tw/Express/map</value>
+
+                <value id="printTradeDocumentStage" type="host">https://logistics-stage.ecpay.com.tw/helper/printTradeDocument</value>
+                <value id="printTradeDocument" type="host">https://logistics.ecpay.com.tw/helper/printTradeDocument</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

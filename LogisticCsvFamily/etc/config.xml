@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <ecpaylogisticcsvfamily>
+                <active>0</active>
+                <sallowspecific>1</sallowspecific>
+                <specificcountry>TW</specificcountry>
+                <ecpay_logistic_type>C2C</ecpay_logistic_type>
+                <model>Ecpay\LogisticCsvFamily\Model\Carrier\Shipping</model>
+                <name>ECPay CVS Family</name>
+                <price>0</price>
+                <title>ECPay CVS Family</title>
+                <max_order_amount>19999</max_order_amount>
+                <min_order_amount>0</min_order_amount>
+                <cash_on_delivery>0</cash_on_delivery>
+            </ecpaylogisticcsvfamily>
+        </carriers>
+    </default>
+</config>

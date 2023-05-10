@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"       xsi:noNamespaceSchemaLocation="urn:magento:framework:DataObject/etc/fieldset.xsd">
+    <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid" type="Magento\Sales\Model\ResourceModel\Grid">
+        <arguments>
+            <argument name="columns" xsi:type="array">
+                <item name="ecpay_invoice_carruer_type" xsi:type="string">sales_order.ecpay_invoice_carruer_type</item>
+                <item name="ecpay_invoice_type" xsi:type="string">sales_order.ecpay_invoice_type</item>
+                <item name="ecpay_invoice_carruer_num" xsi:type="string">sales_order.ecpay_invoice_carruer_num</item>
+                <item name="ecpay_invoice_love_code" xsi:type="string">sales_order.ecpay_invoice_love_code</item>
+                <item name="ecpay_invoice_customer_company" xsi:type="string">sales_order.ecpay_invoice_customer_company</item>
+                <item name="ecpay_invoice_customer_identifier" xsi:type="string">sales_order.ecpay_invoice_customer_identifier</item>
+            </argument>
+        </arguments>
+    </virtualType>
+</config>

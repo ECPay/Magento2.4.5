@@ -1,0 +1,24 @@
+.invoice-info label {
+    display: inline-block;
+    width: 160px;
+}
+
+.order-view-custom-block {
+    position: relative;
+}
+.invoice-msg {
+    position: absolute;
+    right: 0;
+}
+.invoice-msg .msg {
+    margin-bottom: 2rem;
+    padding: 1rem 2rem 1rem 2rem;
+    border-radius: 4px;
+    color: #514943;
+}
+.invoice-msg.error .msg {
+    background-color: #ffc5c5;
+}
+.invoice-msg.success .msg {
+    background-color: #c5ffd3;
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <ecpaylogistichometcat>
+                <active>0</active>
+                <sallowspecific>1</sallowspecific>
+                <specificcountry>TW</specificcountry>
+                <ecpay_logistic_type>C2C</ecpay_logistic_type>
+                <model>Ecpay\LogisticHomeTcat\Model\Carrier\Shipping</model>
+                <name>ECPay Home Tcat</name>
+                <price>0</price>
+                <title>ECPay Home Tcat</title>
+                <max_order_amount>19999</max_order_amount>
+                <min_order_amount>0</min_order_amount>
+            </ecpaylogistichometcat>
+        </carriers>
+    </default>
+</config>

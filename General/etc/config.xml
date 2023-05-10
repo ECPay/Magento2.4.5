@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <general_config>
+            <general>
+                <ecpay_enabled_payment>1</ecpay_enabled_payment>
+                <ecpay_enabled_logistic>1</ecpay_enabled_logistic>
+                <ecpay_enabled_invoice>1</ecpay_enabled_invoice>
+            </general>
+        </general_config>
+
+        <csp>
+            <policies>
+                <storefront>
+                    <frame-ancestors>
+                        <inline>0</inline>
+                    </frame-ancestors>
+                </storefront>
+                <admin>
+                    <frame-ancestors>
+                        <inline>0</inline>
+                    </frame-ancestors>
+                </admin>
+            </policies>
+        </csp>
+        
+    </default>
+</config>

@@ -1,0 +1,62 @@
+<?php
+/**
+* @var $block \Ecpay\General\Block\Adminhtml\Order\OrderShipping
+*/
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $block->getViewFileUrl('Ecpay_General::css/order/shipping-block.css')?>">
+
+<section class="admin__page-section order-view-custom-block" id="shipping-block">
+    <div class="admin__page-section-title">
+        <span class="title"><?= __('Ecpay Shipping Infomation');?></span>
+    </div>
+
+    <div class="shipping-msg" id="shipping-msg" style="display: none;">
+        <span class="msg" id="shipping-msg-content"></span>
+    </div>
+
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-item">
+            <div class="admin__page-section-item-title">
+                <span class="title"><?= __('Shipping Infomation');?></span>
+            </div>
+            <div class="admin__page-section-item-content shipping-info">
+                <label><?= __('Merchant Trade No：');?></label> <!--廠商交易編號-->
+                <span id="merchant_trade_no"></span>
+                <br>
+                <label><?= __('Ecpay Shipping No：');?></label> <!--綠界物流編號-->
+                <span id="all_pay_logistics_id"></span>
+                <br>
+                <label><?= __('CVS Payment No：');?></label> <!--寄貨編號-->
+                <span id="cvs_payment_no"></span>
+                <br>
+                <label><?= __('Booking No：');?></label> <!--托運單號-->
+                <span id="booking_note"></span>
+                <br>
+                <br>
+                <div id="csv_info"></div>
+            </div>
+            <br/>
+            <div id="shipping-btns-block">
+                <input type="button" class="action-default scalable action-save action-secondary" id="change_store_btn" value="<?= __('Choose Store');?>" style="display:none;" disabled />
+                <input type="button" class="action-default scalable action-save action-secondary" id="create_shipping_btn" value="<?= __('Create Logistic');?>" style="display:none;" disabled />
+                <input type="button" class="action-default scalable action-save action-secondary" id="print_shipping_btn" value="<?= __('Print Logistic');?>" style="display:none;" disabled />
+            </div>
+        </div>
+    </div>
+
+    <div id="print_form"></div>
+    <div id="map_form"></div>
+</section>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Ecpay_General/js/order/shipping-ajax": {
+            "baseUrl": <?php echo json_encode($block->getBaseUrl()); ?>,
+            "encryptData": <?php echo $block->getEncryptData(); ?>,
+            "shippingData": <?php echo $block->getShippingData(); ?>,
+            "shippingModuleEnable": <?php echo $block->getLogisticModuleEnable(); ?>
+        }
+    }
+}
+</script>

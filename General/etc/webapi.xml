@@ -1,0 +1,76 @@
+<?xml version="1.0" ?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route method="POST" url="/V1/ecpay_general/logistic/change_store">
+        <service class="Ecpay\General\Api\LogisticInterface" method="changeStore"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route method="POST" url="/V1/ecpay_general/logistic/create_order">
+        <service class="Ecpay\General\Api\LogisticInterface" method="createOrder"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route method="POST" url="/V1/ecpay_general/logistic/print_order">
+        <service class="Ecpay\General\Api\LogisticInterface" method="printOrder"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route method="GET" url="/V1/ecpay_general/logistic/get_logistic_main_config">
+        <service class="Ecpay\General\Api\LogisticInterface" method="getLogisticMainConfig"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route method="GET" url="/V1/ecpay_general/logistic/get_shipping_mothod">
+        <service class="Ecpay\General\Api\LogisticInterface" method="getShippingMethod"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route method="GET" url="/V1/ecpay_general/logistic/get_shipping_tag">
+        <service class="Ecpay\General\Api\LogisticInterface" method="getShippingTag"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+
+
+    
+    <route method="POST" url="/V1/ecpay_general/invoice/create_invoice">
+        <service class="Ecpay\General\Api\InvoiceInterface" method="createInvoice"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route method="POST" url="/V1/ecpay_general/invoice/invalid_invoice">
+        <service class="Ecpay\General\Api\InvoiceInterface" method="invalidInvoice"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route method="GET" url="/V1/ecpay_general/invoice/get_invoice_tag">
+        <service class="Ecpay\General\Api\InvoiceInterface" method="getInvoiceTag"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route method="GET" url="/V1/ecpay_general/invoice/get_invoice_main_config">
+        <service class="Ecpay\General\Api\InvoiceInterface" method="getInvoiceMainConfig"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+</routes>

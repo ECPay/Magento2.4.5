@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="ecpay" translate="label" sortOrder="10">
+            <label>ECPAY</label>
+        </tab>
+        <section id="main_config" translate="label" sortOrder="5274" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>General settings</label>
+            <tab>ecpay</tab>
+            <resource>Ecpay_General::main_config</resource>
+            <group id="main" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Enable ECPay method</label>
+
+                <field id="ecpay_enabled_payment" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable ECPay gateway method</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="ecpay_enabled_logistic" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable ECPay shipping method</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="ecpay_enabled_invoice" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable ECPay invoice method</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+
+        <section id="payment_config" translate="label" sortOrder="5275" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Gateway settings</label>
+            <tab>ecpay</tab>
+            <resource>Ecpay_General::payment_config</resource>
+            <group id="payment" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Gateway settings</label>
+
+                <field id="payment_order_prefix" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Order no prefix</label>
+                    <comment>Only letters and numbers allowed allowed.</comment>
+                </field>
+
+                <field id="enabled_payment_disp_item_name" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Display order item name</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="enabled_payment_stage" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>ECPay sandbox</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="payment_mid" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>MerchantID</label>
+                </field>
+
+                <field id="payment_hashkey" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>HashKey</label>
+                </field>
+                <field id="payment_hashiv" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>HashIV</label>
+                </field>
+            </group>
+        </section>
+
+        <section id="logistic_config" translate="label" sortOrder="5275" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Shipping settings</label>
+            <tab>ecpay</tab>
+            <resource>Ecpay_General::logistic_config</resource>
+            <group id="logistic" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Shipping settings</label>
+
+                <field id="logistic_order_prefix" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Order no prefix</label>
+                    <comment>Only letters and numbers allowed allowed.</comment>
+                </field>
+
+                <field id="enabled_logistic_disp_item_name" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Display order item name</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="logistic_cvs_type" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>CVS type</label>
+                    <source_model>Ecpay\General\Model\Config\Source\LogisticCvsType</source_model>
+                </field>
+
+                <field id="enable_logistic_auto" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Auto get shipping payment no</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="logistic_sender_name" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Sender name</label>
+                    <comment>Name length between 1 to 10 letter</comment>
+                </field>
+
+                <field id="logistic_sender_phone" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Sender phone</label>
+                </field>
+
+                <field id="logistic_sender_cellphone" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Sender cellphone</label>
+                </field>
+
+                <field id="logistic_sender_zipcode" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Sender zipcode</label>
+                </field>
+
+                <field id="logistic_sender_address" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Sender address</label>
+                </field>
+
+                <field id="enabled_logistic_stage" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>ECPay sandbox</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="logistic_mid" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>MerchantID</label>
+                </field>
+
+                <field id="logistic_hashkey" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>HashKey</label>
+                </field>
+
+                <field id="logistic_hashiv" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>HashIV</label>
+                </field>
+            </group>
+        </section>
+
+        <section id="invoice_config" translate="label" sortOrder="5275" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>E-Invoice setting</label>
+            <tab>ecpay</tab>
+            <resource>Ecpay_General::invoice_config</resource>
+            <group id="invoice" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>E-Invoice setting</label>
+
+                <field id="invoice_order_prefix" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Order no prefix</label>
+                    <comment>Only letters and numbers allowed allowed.</comment>
+                </field>
+
+                <field id="enabled_invoice_auto" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Get mode</label>
+                    <source_model>Ecpay\General\Model\Config\Source\InvoiceAuto</source_model>
+                </field>
+
+                <!-- <field id="enabled_cancel_invoice_auto" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>作廢發票模式</label>
+                    <source_model>Ecpay\General\Model\Config\Source\InvoiceCancelAuto</source_model>
+                </field> -->
+
+                <field id="invoice_dalay_date" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Delay invoice date</label>
+                    <comment>Only numbers allowed.</comment>
+                </field>
+
+                <field id="invoice_donate" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Donate unit</label>
+                    <comment>Only numbers allowed.</comment>
+                </field>
+
+                <field id="enabled_invoice_stage" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>ECPay sandbox</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="invoice_mid" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>MerchantID</label>
+                </field>
+
+                <field id="invoice_hashkey" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>HashKey</label>
+                </field>
+                <field id="invoice_hashiv" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>HashIV</label>
+                </field>
+            </group>
+        </section>
+
+    </system>
+</config>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"       xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
+    <extension_attributes for="Magento\Quote\Api\Data\AddressInterface">
+        <attribute code="ecpay_invoice_carruer_type" type="string"/>
+        <attribute code="ecpay_invoice_type" type="string"/>
+        <attribute code="ecpay_invoice_carruer_num" type="string"/>
+        <attribute code="ecpay_invoice_love_code" type="string"/>
+        <attribute code="ecpay_invoice_customer_company" type="string"/>
+        <attribute code="ecpay_invoice_customer_identifier" type="string"/>
+    </extension_attributes>
+</config>
