@@ -26,7 +26,7 @@
 "Enable ECPay shipping method","Enable ECPay shipping method"
 "Enable ECPay invoice method","Enable ECPay invoice method"
 "Order no prefix","Order no prefix"
-"Only letters and numbers allowed allowed.","Only letters and numbers allowed allowed."
+"Only a maximum of 5-character letters and numbers are allowed.","Only a maximum of 5-character letters and numbers are allowed."
 "Display order item name","Display order item name"
 "ECPay sandbox","ECPay sandbox"
 "MerchantID","MerchantID"
@@ -122,6 +122,7 @@
 
 "Invalid number of periods.","Invalid number of periods."
 
+"Payment failed.","Payment failed."
 "Thank you for your purchase!","Thank you for your purchase!"
 "Order Information","Order Information"
 "Payment Information","Payment Information"

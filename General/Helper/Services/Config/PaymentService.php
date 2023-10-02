@@ -6,11 +6,11 @@ use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Sales\Model\Order;
 
+use Ecpay\General\Helper\Services\Common\MailService;
 use Ecpay\General\Helper\Services\Config\MainService;
 use Ecpay\Sdk\Factories\Factory;
 use Ecpay\Sdk\Services\CheckMacValueService;
 use Ecpay\Sdk\Services\UrlService;
-use Ecpay\General\Helper\Services\Common\MailService;
 
 class PaymentService extends AbstractHelper
 {
@@ -62,14 +62,14 @@ class PaymentService extends AbstractHelper
     public const UNIONPAY_DISABLED = 2;
 
     /**
-     * @var MainService
-     */
-    protected $_mainService;
-
-    /**
      * @var MailService
      */
     protected $_mailService;
+
+    /**
+     * @var MainService
+     */
+    protected $_mainService;
 
     /**
      * @var array API payment info url success return code
@@ -97,88 +97,21 @@ class PaymentService extends AbstractHelper
     }
 
     /**
-     * 取出測試帳號KEY IV
+     * 比對 checkMacValue
      *
-     * @return array
-     */
-    public function getStageAccount()
-    {
-        $info = [
-            'MerchantId' => '3002607',
-            'HashKey'    => 'pwFHCqoQZGmho4w6',
-            'HashIv'     => 'EkRm7iFT261dpevs',
-        ];
-
-        return $info;
-    }
-
-    /**
-     * 取得綠界金流
-     *
-     * @return array
-     */
-    public function getEcpayAllPayment()
-    {
-        return [
-            'ecpay_webatm_gateway',
-            'ecpay_atm_gateway',
-            'ecpay_credit_gateway',
-            'ecpay_credit_installment_gateway',
-            'ecpay_cvs_gateway',
-            'ecpay_barcode_gateway',
-            'ecpay_applepay_gateway'
-        ];
-    }
-
-    /**
-     * 判斷是否為綠界金流
-     *
-     * @param  string $paymentMethod
+     * @param  array  $accountInfo
+     * @param  array  $input
      * @return bool
      */
-    public function isEcpayPayment(string $paymentMethod)
+    public function checkMacValue(array $accountInfo, array $input)
     {
-        return in_array($paymentMethod, $this->getEcpayAllPayment());
-    }
+        $checkMacValueService = new CheckMacValueService(
+            $accountInfo['HashKey'],
+            $accountInfo['HashIv'],
+            CheckMacValueService::METHOD_SHA256,
+        );
 
-    /**
-     * 取出API介接網址
-     *
-     * @param  string  $action
-     * @param  int     $stage
-     * @return string  $url
-     */
-    public function getApiUrl(string $action = 'check_out', int $stage = 1)
-    {
-
-        if ($stage == 1) {
-
-            switch ($action) {
-
-                case 'check_out':
-                    $url = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5' ;
-                break;
-
-                default:
-                    $url = '' ;
-                break;
-            }
-
-        } else {
-
-            switch ($action) {
-
-                case 'check_out':
-                    $url = 'https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5' ;
-                break;
-
-                default:
-                    $url = '' ;
-                break;
-            }
-        }
-
-        return $url;
+        return ($checkMacValueService->generate($input) === $input['CheckMacValue']);
     }
 
     /**
@@ -218,7 +151,7 @@ class PaymentService extends AbstractHelper
             'MerchantTradeDate' => date('Y/m/d H:i:s'),
             'PaymentType'       => 'aio',
             'TotalAmount'       => $input['totalAmount'],
-            'TradeDesc'         => UrlService::ecpayUrlEncode('magento_ecpay_' . $input['paymentMethod']),
+            'TradeDesc'         => UrlService::ecpayUrlEncode($this->_mainService->getModuleDescription()),
             'ItemName'          => $input['itemName'],
             'ChoosePayment'     => $this->getChoosePayment($input['paymentMethod']),
             'EncryptType'       => 1,
@@ -265,6 +198,75 @@ class PaymentService extends AbstractHelper
     }
 
     /**
+     * 轉換訂購商品格式符合金流訂單API
+     *
+     * @param  array   $orderItem
+     * @return string  $itemName
+     */
+    public function convertToPaymentItemName($orderItem)
+    {
+        $itemName = '';
+
+        foreach ($orderItem as $key => $value) {
+
+            $itemName .= $value['name'] . '#' ;
+        }
+
+        return $itemName;
+    }
+
+    /**
+     * Get the amount
+     *
+     * @param  mixed $amount Amount
+     * @return integer
+     */
+    public function getAmount($amount = 0)
+    {
+        return round($amount, 0);
+    }
+
+    /**
+     * 取出API介接網址
+     *
+     * @param  string  $action
+     * @param  int     $stage
+     * @return string  $url
+     */
+    public function getApiUrl(string $action = 'check_out', int $stage = 1)
+    {
+
+        if ($stage == 1) {
+
+            switch ($action) {
+
+                case 'check_out':
+                    $url = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5' ;
+                break;
+
+                default:
+                    $url = '' ;
+                break;
+            }
+
+        } else {
+
+            switch ($action) {
+
+                case 'check_out':
+                    $url = 'https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5' ;
+                break;
+
+                default:
+                    $url = '' ;
+                break;
+            }
+        }
+
+        return $url;
+    }
+
+    /**
      * 取得 AIO 對應的 ChoosePayment
      *
      * @param  string  $paymentMethod
@@ -300,62 +302,131 @@ class PaymentService extends AbstractHelper
     }
 
     /**
-     * 比對 checkMacValue
+     * 取得分期期數
      *
-     * @param  array  $accountInfo
-     * @param  array  $input
-     * @return bool
+     * @return array
      */
-    public function checkMacValue(array $accountInfo, array $input)
+    public function getCreditInstallments()
     {
-        $checkMacValueService = new CheckMacValueService(
-            $accountInfo['HashKey'],
-            $accountInfo['HashIv'],
-            CheckMacValueService::METHOD_SHA256,
-        );
-
-        return ($checkMacValueService->generate($input) === $input['CheckMacValue']);
+        return [
+            'credit_3',
+            'credit_6',
+            'credit_12',
+            'credit_18',
+            'credit_24',
+            'credit_30N',
+        ];
     }
 
     /**
-     * 轉換訂購商品格式符合金流訂單API
+     * 取得分期期數名稱
      *
-     * @param  array   $orderItem
-     * @return string  $itemName
+     * @param  string $key
+     * @return string
      */
-    public function convertToPaymentItemName($orderItem)
+    public function getCreditInstallmentName(string $key)
     {
-        $itemName = '';
+        switch ($key) {
+            case 'credit_3':
+                return __('Credit(3 Periods)');
+            case 'credit_6':
+                return __('Credit(6 Periods)');
+            case 'credit_12':
+                return __('Credit(12 Periods)');
+            case 'credit_18':
+                return __('Credit(18 Periods)');
+            case 'credit_24':
+                return __('Credit(24 Periods)');
+            case 'credit_30N':
+                return __('Dream Installment (available only at Bank SinoPac)');
+            default:
+                return '';
+        }
+    }
 
-        foreach ($orderItem as $key => $value) {
+    /**
+     * 取得綠界金流
+     *
+     * @return array
+     */
+    public function getEcpayAllPayment()
+    {
+        return [
+            'ecpay_webatm_gateway',
+            'ecpay_atm_gateway',
+            'ecpay_credit_gateway',
+            'ecpay_credit_installment_gateway',
+            'ecpay_cvs_gateway',
+            'ecpay_barcode_gateway',
+            'ecpay_applepay_gateway'
+        ];
+    }
 
-            $itemName .= $value['name'] . '#' ;
+    /**
+     * Get obtaining code comment
+     *
+     * @param  string $pattern  Message pattern
+     * @param  array  $feedback AIO feedback
+     * @return string
+     */
+    public function getObtainingCodeComment($pattern = '', $feedback = array())
+    {
+        // Filter inputs
+        $undefinedMessage = 'undefined';
+        if (empty($pattern) === true) {
+            return $undefinedMessage;
         }
 
-        return $itemName;
-    }
+        $list = array(
+            'PaymentType',
+            'RtnCode',
+            'RtnMsg',
+            'BankCode',
+            'vAccount',
+            'ExpireDate',
+            'PaymentNo',
+            'Barcode1',
+            'Barcode2',
+            'Barcode3',
+        );
+        $inputs = $this->only($feedback, $list);
 
-    /**
-     * Validate the amounts
-     *
-     * @param  mixed $source Source amount
-     * @param  mixed $target Target amount
-     * @return boolean
-     */
-    public function validAmount($source = 0, $target = 0)
-    {
-        return ($this->getAmount($source) === $this->getAmount($target));
-    }
-
-    /**
-     * Get the amount
-     *
-     * @param  mixed $amount Amount
-     * @return integer
-     */
-    public function getAmount($amount = 0)
-    {
-        return round($amount, 0);
+        $type = $this->getPaymentMethod($inputs['PaymentType']);
+        switch ($type) {
+            case 'ATM':
+                return sprintf(
+                    $pattern,
+                    $inputs['RtnCode'],
+                    $inputs['RtnMsg'],
+                    $inputs['BankCode'],
+                    $inputs['vAccount'],
+                    $inputs['ExpireDate']
+                );
+                break;
+            case 'CVS':
+                return sprintf(
+                    $pattern,
+                    $inputs['RtnCode'],
+                    $inputs['RtnMsg'],
+                    $inputs['PaymentNo'],
+                    $inputs['ExpireDate']
+                );
+                break;
+            case 'BARCODE':
+                return sprintf(
+                    $pattern,
+                    $inputs['RtnCode'],
+                    $inputs['RtnMsg'],
+                    $inputs['ExpireDate'],
+                    $inputs['Barcode1'],
+                    $inputs['Barcode2'],
+                    $inputs['Barcode3']
+                );
+                break;
+            default:
+                break;
+        }
+        return $undefinedMessage;
     }
 
     /**
@@ -434,6 +505,23 @@ class PaymentService extends AbstractHelper
     }
 
     /**
+     * Get the payment method from the payment type
+     *
+     * @param  string $paymentType Payment type
+     * @return string|bool
+     */
+    public function getPaymentMethod($paymentType = '')
+    {
+        // Filter inputs
+        if (empty($paymentType) === true) {
+            return false;
+        }
+
+        $pieces = explode('_', $paymentType);
+        return $this->getSdkPaymentMethod($pieces[0]);
+    }
+
+    /**
      * Get AIO returnurl response
      *
      * @param  array  $paymentInfo
@@ -452,6 +540,109 @@ class PaymentService extends AbstractHelper
                 'comment' => sprintf(__('Failed To Pay, error : %s'), $paymentInfo['RtnMsg'])
             ];
         }
+    }
+
+    /**
+     * 取出測試帳號KEY IV
+     *
+     * @return array
+     */
+    public function getStageAccount()
+    {
+        $info = [
+            'MerchantId' => '3002607',
+            'HashKey'    => 'pwFHCqoQZGmho4w6',
+            'HashIv'     => 'EkRm7iFT261dpevs',
+        ];
+
+        return $info;
+    }
+
+    /**
+     * 取得可用的分期期數
+     *
+     * @return array
+     */
+    public function getValidCreditInstallments()
+    {
+        $creditInstallments = $this->_mainService->getPaymentModuleConfig('payment/ecpay_credit_installment_gateway', 'credit_installment');
+
+        if (empty($creditInstallments)) {
+            return [];
+        }
+
+        $trimed = trim($creditInstallments);
+        return explode(',', $trimed);
+    }
+
+    /**
+     * 判斷是否為綠界金流
+     *
+     * @param  string $paymentMethod
+     * @return bool
+     */
+    public function isEcpayPayment(string $paymentMethod)
+    {
+        return in_array($paymentMethod, $this->getEcpayAllPayment());
+    }
+
+    /**
+     * 檢查是否為可用的分期期數
+     *
+     * @param  string $choosenCreditInstallment
+     * @return bool
+     */
+    public function isValidCreditInstallment(string $choosenCreditInstallment)
+    {
+        $creditInstallments = $this->getValidCreditInstallments();
+        return (in_array($choosenCreditInstallment, $creditInstallments));
+    }
+
+    /**
+     * Filter the inputs
+     *
+     * @param array $source Source data
+     * @param array $whiteList White list
+     * @return array
+     */
+    public function only($source = array(), $whiteList = array())
+    {
+        $variables = array();
+
+        // Return empty array when do not set white list
+        if (empty($whiteList) === true) {
+            return $source;
+        }
+
+        foreach ($whiteList as $name) {
+            if (isset($source[$name]) === true) {
+                $variables[$name] = $source[$name];
+            } else {
+                $variables[$name] = '';
+            }
+        }
+        return $variables;
+    }
+
+    /**
+     * Send payment response info mail
+     * @param array $mailData
+     */
+    public function sendMail($mailData = array())
+    {
+        $this->_mailService->send($mailData);
+    }
+
+    /**
+     * Validate the amounts
+     *
+     * @param  mixed $source Source amount
+     * @param  mixed $target Target amount
+     * @return boolean
+     */
+    public function validAmount($source = 0, $target = 0)
+    {
+        return ($this->getAmount($source) === $this->getAmount($target));
     }
 
     /**
@@ -495,196 +686,5 @@ class PaymentService extends AbstractHelper
                 break;
         }
         return $sdkPayment;
-    }
-
-    /**
-     * Get the payment method from the payment type
-     *
-     * @param  string $paymentType Payment type
-     * @return string|bool
-     */
-    public function getPaymentMethod($paymentType = '')
-    {
-        // Filter inputs
-        if (empty($paymentType) === true) {
-            return false;
-        }
-
-        $pieces = explode('_', $paymentType);
-        return $this->getSdkPaymentMethod($pieces[0]);
-    }
-
-    /**
-     * 取得分期期數
-     *
-     * @return array
-     */
-    public function getCreditInstallments()
-    {
-        return [
-            'credit_3',
-            'credit_6',
-            'credit_12',
-            'credit_18',
-            'credit_24',
-            'credit_30N',
-        ];
-    }
-
-    /**
-     * 取得分期期數名稱
-     *
-     * @param  string $key
-     * @return string
-     */
-    public function getCreditInstallmentName(string $key)
-    {
-        switch ($key) {
-            case 'credit_3':
-                return __('Credit(3 Periods)');
-            case 'credit_6':
-                return __('Credit(6 Periods)');
-            case 'credit_12':
-                return __('Credit(12 Periods)');
-            case 'credit_18':
-                return __('Credit(18 Periods)');
-            case 'credit_24':
-                return __('Credit(24 Periods)');
-            case 'credit_30N':
-                return __('Dream Installment (available only at Bank SinoPac)');
-            default:
-                return '';
-        }
-    }
-
-    /**
-     * 取得可用的分期期數
-     *
-     * @return array
-     */
-    public function getValidCreditInstallments()
-    {
-        $creditInstallments = $this->_mainService->getPaymentModuleConfig('payment/ecpay_credit_installment_gateway', 'credit_installment');
-
-        if (empty($creditInstallments)) {
-            return [];
-        }
-
-        $trimed = trim($creditInstallments);
-        return explode(',', $trimed);
-    }
-
-    /**
-     * 檢查是否為可用的分期期數
-     *
-     * @param  string $choosenCreditInstallment
-     * @return bool
-     */
-    public function isValidCreditInstallment(string $choosenCreditInstallment)
-    {
-        $creditInstallments = $this->getValidCreditInstallments();
-        return (in_array($choosenCreditInstallment, $creditInstallments));
-    }
-
-    /**
-     * Get obtaining code comment
-     *
-     * @param  string $pattern  Message pattern
-     * @param  array  $feedback AIO feedback
-     * @return string
-     */
-    public function getObtainingCodeComment($pattern = '', $feedback = array())
-    {
-        // Filter inputs
-        $undefinedMessage = 'undefined';
-        if (empty($pattern) === true) {
-            return $undefinedMessage;
-        }
-
-        $list = array(
-            'PaymentType',
-            'RtnCode',
-            'RtnMsg',
-            'BankCode',
-            'vAccount',
-            'ExpireDate',
-            'PaymentNo',
-            'Barcode1',
-            'Barcode2',
-            'Barcode3',
-        );
-        $inputs = $this->only($feedback, $list);
-
-        $type = $this->getPaymentMethod($inputs['PaymentType']);
-        switch ($type) {
-            case 'ATM':
-                return sprintf(
-                    $pattern,
-                    $inputs['RtnCode'],
-                    $inputs['RtnMsg'],
-                    $inputs['BankCode'],
-                    $inputs['vAccount'],
-                    $inputs['ExpireDate']
-                );
-                break;
-            case 'CVS':
-                return sprintf(
-                    $pattern,
-                    $inputs['RtnCode'],
-                    $inputs['RtnMsg'],
-                    $inputs['PaymentNo'],
-                    $inputs['ExpireDate']
-                );
-                break;
-            case 'BARCODE':
-                return sprintf(
-                    $pattern,
-                    $inputs['RtnCode'],
-                    $inputs['RtnMsg'],
-                    $inputs['ExpireDate'],
-                    $inputs['Barcode1'],
-                    $inputs['Barcode2'],
-                    $inputs['Barcode3']
-                );
-                break;
-            default:
-                break;
-        }
-        return $undefinedMessage;
-    }
-
-    /**
-     * Filter the inputs
-     *
-     * @param array $source Source data
-     * @param array $whiteList White list
-     * @return array
-     */
-    public function only($source = array(), $whiteList = array())
-    {
-        $variables = array();
-
-        // Return empty array when do not set white list
-        if (empty($whiteList) === true) {
-            return $source;
-        }
-
-        foreach ($whiteList as $name) {
-            if (isset($source[$name]) === true) {
-                $variables[$name] = $source[$name];
-            } else {
-                $variables[$name] = '';
-            }
-        }
-        return $variables;
-    }
-
-    /**
-     * Send payment response info mail
-     * @param array $mailData
-     */
-    public function sendMail($mailData = array())
-    {
-        $this->_mailService->send($mailData);
     }
 }

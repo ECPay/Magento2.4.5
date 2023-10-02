@@ -178,8 +178,10 @@ class PaymentToEcpay extends Action implements CsrfAwareActionInterface
         $additionalInformation = $this->_orderService->getAdditionalInformation($orderId);
         $this->_loggerInterface->debug('PaymentToEcpay $additionalInformation:'. print_r($additionalInformation,true));
 
+        // 備註及儲存金流廠商訂單編號
         $comment = sprintf(__('ECPay Payment, MerchantTradeNo :%s'), $merchantTradeNo);
         $this->_orderService->setOrderCommentForBack($orderId, $comment);
+        $this->_orderService->setOrderData($orderId, 'ecpay_payment_merchant_trade_no', $merchantTradeNo) ;
 
         $input = [
             'enctyOrderId'          => $enctyOrderId,

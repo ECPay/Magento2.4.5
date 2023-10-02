@@ -1158,14 +1158,14 @@ class LogisticService extends AbstractHelper
 
     /**
      * 計算中華郵政宅配重量運費
-     * @param  int $weight       單位僅限KG
+     * @param  int|float $weight  單位僅限KG
      * @param  int $shippingFee1 0-5   KG
      * @param  int $shippingFee2 5-10  KG
      * @param  int $shippingFee3 10-15 KG
      * @param  int $shippingFee4 15-20 KG
      * @return int
      */
-    public function calculateHomePostShippingWeight(int $weight, int $shippingFee1, int $shippingFee2, int $shippingFee3, int $shippingFee4)
+    public function calculateHomePostShippingWeight(int|float $weight, int $shippingFee1, int $shippingFee2, int $shippingFee3, int $shippingFee4)
     {
         if ($weight <= 5) {
             return $shippingFee1;

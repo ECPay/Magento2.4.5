@@ -65,7 +65,7 @@ define([
                                 case 'shipment':
                                     let response_data = JSON.parse(response.data);
                                     if (response_data.shipping_method == 'ecpaylogisticcsvunimart_ecpaylogisticcsvunimart'|| response_data.shipping_method == 'ecpaylogisticcsvfamily_ecpaylogisticcsvfamily'|| response_data.shipping_method == 'ecpaylogisticcsvhilife_ecpaylogisticcsvhilife'|| response_data.shipping_method == 'ecpaylogisticcsvokmart_ecpaylogisticcsvokmart'|| response_data.shipping_method == 'ecpaylogistichomepost_ecpaylogistichomepost'|| response_data.shipping_method == 'ecpaylogistichometcat_ecpaylogistichometcat') {
-                                        this.shippingMethod = response_data.shipping_method;
+                                        shippingFunction.shippingMethod = response_data.shipping_method;
                                         shippingFunction.getShippingTag();
                                     }
                                     else {
@@ -77,7 +77,7 @@ define([
                                         shippingFunction.showBtn('#print_shipping_btn');
                                     } else {
                                         shippingFunction.showBtn('#create_shipping_btn');
-                                        if (this.shippingMethod == 'ecpaylogisticcsvunimart_ecpaylogisticcsvunimart'|| this.shippingMethod == 'ecpaylogisticcsvfamily_ecpaylogisticcsvfamily'|| this.shippingMethod == 'ecpaylogisticcsvhilife_ecpaylogisticcsvhilife'|| this.shippingMethod == 'ecpaylogisticcsvokmart_ecpaylogisticcsvokmart') {
+                                        if (shippingFunction.shippingMethod == 'ecpaylogisticcsvunimart_ecpaylogisticcsvunimart'|| shippingFunction.shippingMethod == 'ecpaylogisticcsvfamily_ecpaylogisticcsvfamily'|| shippingFunction.shippingMethod == 'ecpaylogisticcsvhilife_ecpaylogisticcsvhilife'|| shippingFunction.shippingMethod == 'ecpaylogisticcsvokmart_ecpaylogisticcsvokmart') {
                                             shippingFunction.showBtn('#change_store_btn');
                                         }
                                     }

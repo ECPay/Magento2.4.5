@@ -20,73 +20,90 @@ if ($isShow) {
 }
 ?>
 
-<div class="checkout-success">
-    <h1><?= $block->escapeHtml(__('Thank you for your purchase!'))?></h1>
+<?php if ($isShow) : ?>
+    <?php if ($orderInfo['state'] !== 'canceled' && $orderInfo['state'] !== 'closed') : ?>
+        <!-- 交易成功 -->
+        <div class="checkout-success">
+            <h1><?= $block->escapeHtml(__('Thank you for your purchase!'))?></h1>
 
-    <?php if ($isShow) : ?>
-    <!-- 訂單資訊 -->
-    <div class="block-ecpay-thankyou">
-        <div class="block-title"><strong><?= $block->escapeHtml(__('Order Information'))?></strong></div>
-        <div class="block-content">
-            <div class="box">
-                <div class="box-content">
-                    <p>
-                        <?= $block->escapeHtml(__('Order ID'))?>：<?= $orderInfo['real_order_id']; ?><br>
-                        <?= $block->escapeHtml(__('Order Date'))?>：<?= $block->formatDate($orderInfo['created_at']); ?><br>
-                        <?= $block->escapeHtml(__('Grand Total'))?>：<?= $orders->formatPrice($orderInfo['amount']); ?><br>
-                    </p>
+            <!-- 訂單資訊 -->
+            <div class="block-ecpay-thankyou">
+                <div class="block-title"><strong><?= $block->escapeHtml(__('Order Information'))?></strong></div>
+                <div class="block-content">
+                    <div class="box">
+                        <div class="box-content">
+                            <p>
+                                <?= $block->escapeHtml(__('Order ID'))?>：<?= $orderInfo['real_order_id']; ?><br>
+                                <?= $block->escapeHtml(__('Order Date'))?>：<?= $block->formatDate($orderInfo['created_at']); ?><br>
+                                <?= $block->escapeHtml(__('Grand Total'))?>：<?= $orders->formatPrice($orderInfo['amount']); ?><br>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /訂單資訊 -->
+
+            <!-- 付款資訊 -->
+            <div class="block-ecpay-thankyou">
+                <div class="block-title"><strong><?= $block->escapeHtml(__('Payment Information'))?></strong></div>
+                <div class="block-content">
+                    <div class="box">
+                        <div class="box-content">
+                            <p>
+                                <?= $block->escapeHtml(__('Payment Method'))?>：<?= $paymentInfo['payment_method']; ?><br>
+
+                                <?php if ($paymentInfo['is_ecpay_payment'] === 'Y' && !empty($paymentInfo['payment_info'])) : ?>
+                                    <?php foreach ($paymentInfo['payment_info'] as $info): ?>
+                                        <?= $info['key']; ?>：<?= $info['val']; ?> <br>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /付款資訊 -->
+
+            <!-- 運送資訊 -->
+            <div class="block-ecpay-thankyou">
+                <div class="block-title"><strong><?= $block->escapeHtml(__('Shipping Information'))?></strong></div>
+                <div class="block-content">
+                    <div class="box">
+                        <div class="box-content">
+                            <p>
+                                <?= $block->escapeHtml(__('Shipping Method'))?>：<?= $shippingInfo['shipping_method']; ?><br>
+                                <?php if ($shippingInfo['is_ecpay_cvs_logistics'] === 'Y') : ?>
+                                <?= $block->escapeHtml(__('CVS Store ID'))?>：<?php echo $cvsInfo['cvs_store_id'] ?><br>
+                                <?= $block->escapeHtml(__('CVS Store Name'))?>：<?php echo $cvsInfo['cvs_store_name'] ?><br>
+                                <?= $block->escapeHtml(__('CVS Store Address'))?>：<?php echo $cvsInfo['cvs_store_address'] ?><br>
+                                <?php endif; ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /運送資訊 -->
+
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <a class="action primary continue" href="<?= $block->escapeUrl($block->getContinueUrl()) ?>"><span><?= $block->escapeHtml(__('Continue Shopping')) ?></span></a>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- /訂單資訊 -->
+    <?php else: ?>
+        <!-- 交易失敗 -->
+        <h1><?= $block->escapeHtml(__('Payment failed.'))?></h1>
 
-    <!-- 付款資訊 -->
-    <div class="block-ecpay-thankyou">
-        <div class="block-title"><strong><?= $block->escapeHtml(__('Payment Information'))?></strong></div>
-        <div class="block-content">
-            <div class="box">
-                <div class="box-content">
-                    <p>
-                        <?= $block->escapeHtml(__('Payment Method'))?>：<?= $paymentInfo['payment_method']; ?><br>
-
-                        <?php if ($paymentInfo['is_ecpay_payment'] === 'Y' && !empty($paymentInfo['payment_info'])) : ?>
-                            <?php foreach ($paymentInfo['payment_info'] as $info): ?>
-                                <?= $info['key']; ?>：<?= $info['val']; ?> <br>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /付款資訊 -->
-
-    <!-- 運送資訊 -->
-    <div class="block-ecpay-thankyou">
-        <div class="block-title"><strong><?= $block->escapeHtml(__('Shipping Information'))?></strong></div>
-        <div class="block-content">
-            <div class="box">
-                <div class="box-content">
-                    <p>
-                        <?= $block->escapeHtml(__('Shipping Method'))?>：<?= $shippingInfo['shipping_method']; ?><br>
-                        <?php if ($shippingInfo['is_ecpay_cvs_logistics'] === 'Y') : ?>
-                        <?= $block->escapeHtml(__('CVS Store ID'))?>：<?php echo $cvsInfo['cvs_store_id'] ?><br>
-                        <?= $block->escapeHtml(__('CVS Store Name'))?>：<?php echo $cvsInfo['cvs_store_name'] ?><br>
-                        <?= $block->escapeHtml(__('CVS Store Address'))?>：<?php echo $cvsInfo['cvs_store_address'] ?><br>
-                        <?php endif; ?>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /運送資訊 -->
-
-    <div class="actions-toolbar">
-        <div class="primary">
-            <a class="action primary continue" href="<?= $block->escapeUrl($block->getContinueUrl()) ?>"><span><?= $block->escapeHtml(__('Continue Shopping')) ?></span></a>
-        </div>
-    </div>
-
+        <?php if ($orderInfo['real_order_id']) :?>
+            <p><?= $block->escapeHtml(__('Order #') . $orderInfo['real_order_id']) ?></p>
+        <?php endif ?>
+        <?php if ($error = $block->getErrorMessage()) :?>
+            <p><?= $block->escapeHtml($error) ?></p>
+        <?php endif ?>
+        <p><?= $block->escapeHtml(
+            __('Click <a href="%1">here</a> to continue shopping.', $block->escapeUrl($block->getContinueUrl())),
+            ['a']
+        ) ?>
+        </p>
     <?php endif; ?>
-</div>
+<?php endif ?>

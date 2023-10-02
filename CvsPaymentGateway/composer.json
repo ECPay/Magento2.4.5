@@ -1,15 +1,14 @@
 {
     "name": "ecpay/module-cvs-payment-gateway",
     "type": "magento2-module",
-    "version": "2.4.2305100",
+    "version": "2.4.2308020",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
     "description": "Demonstrates integration with payment gateway",
     "require": {
-        "php": "~5.5.0|~5.6.0|~7.0.0|^7.4",
-        "ecpay/module-general": "2.4.*"
+        "php": "~7.4.0"
     },
     "autoload": {
         "files": [ "registration.php" ],

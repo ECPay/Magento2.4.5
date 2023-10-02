@@ -10,6 +10,7 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Sales\Model\Order;
 use Psr\Log\LoggerInterface ;
 
+use Ecpay\General\Helper\Services\Common\EncryptionsService;
 use Ecpay\General\Helper\Services\Common\OrderService;
 use Ecpay\General\Helper\Services\Common\MailService;
 use Ecpay\General\Helper\Services\Config\MainService;
@@ -26,6 +27,7 @@ class PaymentInfoResponse extends Action implements CsrfAwareActionInterface
     protected $_loggerInterface;
     protected $_requestInterface;
 
+    protected $_encryptionsService;
     protected $_orderService;
 
     protected $_mainService;
@@ -43,6 +45,7 @@ class PaymentInfoResponse extends Action implements CsrfAwareActionInterface
         Context $context,
         RequestInterface $requestInterface,
 
+        EncryptionsService $encryptionsService,
         OrderService $orderService,
 
         MainService $mainService,
@@ -59,6 +62,7 @@ class PaymentInfoResponse extends Action implements CsrfAwareActionInterface
         $this->_loggerInterface = $loggerInterface;
         $this->_requestInterface = $requestInterface;
 
+        $this->_encryptionsService = $encryptionsService;
         $this->_orderService = $orderService;
 
         $this->_mainService = $mainService;
@@ -84,12 +88,17 @@ class PaymentInfoResponse extends Action implements CsrfAwareActionInterface
             throw new Exception('Get ECPay feedback failed.');
         } else {
 
-            // 取出訂單前綴
-            $paymentOrderPreFix = $this->_mainService->getPaymentConfig('payment_order_prefix') ;
-            $this->_loggerInterface->debug('PaymentInfoResponse paymentOrderPreFix:'. print_r($paymentOrderPreFix,true));
+            // 取得原始訂單編號
+            $orderInfo = $this->_orderService->getOrderIdByPaymentMerchantTradeNo($paymentInfo['MerchantTradeNo']);
+            $this->_loggerInterface->debug('PaymentInfoResponse orderInfo:'. print_r($orderInfo,true));
 
-            // 取出訂單編號
-            $orderId = $this->_orderService->resetMerchantTradeNoToOrderId($paymentInfo['MerchantTradeNo'], $paymentOrderPreFix);
+            if (isset($orderInfo['entity_id']) && $orderInfo['entity_id'] !== '') {
+                $orderId = intval($orderInfo['entity_id']);
+            } else {
+                $enctyOrderId = $this->getRequest()->getParam('id') ;
+                $enctyOrderId = str_replace(' ', '+', $enctyOrderId) ;
+                $orderId      = intval($this->_encryptionsService->decrypt($enctyOrderId));
+            }
             $this->_loggerInterface->debug('PaymentInfoResponse orderId:'. print_r($orderId, true));
 
             // 取出 KEY IV MID

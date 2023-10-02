@@ -31,12 +31,13 @@ class OrderInvoice extends AbstractOrder
         InvoiceService $invoiceService,
         array $data = []
     ){
-        parent::__construct($context, $registry, $adminHelper, $data);
 
         $this->_encryptionsService = $encryptionsService;
         $this->_orderService = $orderService;
         $this->_mainService = $mainService;
         $this->_invoiceService = $invoiceService;
+
+        parent::__construct($context, $registry, $adminHelper, $data);
 
         $this->orderId = (int) $this->getOrder()->getId();
     }

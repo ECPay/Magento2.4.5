@@ -7,6 +7,16 @@ use Magento\Store\Model\ScopeInterface;
 
 class MainService extends AbstractHelper
 {
+    /**
+     * 購物車名稱
+     */
+    public const CART_NAME = 'magento';
+
+    /**
+     * 購物車開發版本
+     */
+    public const CART_VERSION = 'v2.4.3-p3';
+
     public function getConfigValue($field, $storeId = null)
     {
         return $this->scopeConfig->getValue(
@@ -20,9 +30,19 @@ class MainService extends AbstractHelper
         return $this->getConfigValue($configPath . $code, $storeId);
     }
 
-    /*
-        Ex:$code=payment_order_prefix  see:/etc/system.xml
-    */
+    /**
+     * Get the module description
+     *
+     * @return string
+     */
+    public function getModuleDescription()
+    {
+        return 'ecpay_module_' . strtolower(self::CART_NAME . '_' . self::CART_VERSION);
+    }
+
+    /**
+     *   Ex:$code=payment_order_prefix  see:/etc/system.xml
+     */
     public function getPaymentConfig($code, $storeId = null)
     {
         $configPath = 'payment_config/payment/' ;

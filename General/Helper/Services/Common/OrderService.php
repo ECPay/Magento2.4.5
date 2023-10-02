@@ -10,6 +10,7 @@ use Magento\Framework\DB\Transaction;
 
 use Magento\Sales\Model\Convert\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
+use Magento\Sales\Model\OrderFactory;
 use Magento\Shipping\Model\ShipmentNotifier;
 
 use Ecpay\General\Model\EcpayLogisticFactory;
@@ -26,6 +27,7 @@ class OrderService extends AbstractHelper
 
     protected $_orderCollectionFactory;
     protected $_convertOrder;
+    protected $_orderFactory;
     protected $_shipmentNotifier;
 
     public function __construct(
@@ -37,6 +39,7 @@ class OrderService extends AbstractHelper
         EcpayPaymentInfoFactory $ecpayPaymentInfoFactory,
         CollectionFactory $orderCollectionFactory,
         Order $convertOrder,
+        OrderFactory $orderFactory,
         ShipmentNotifier $shipmentNotifier
     )
     {
@@ -49,6 +52,7 @@ class OrderService extends AbstractHelper
 
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_convertOrder = $convertOrder;
+        $this->_orderFactory = $orderFactory;
         $this->_shipmentNotifier = $shipmentNotifier;
     }
 
@@ -60,31 +64,33 @@ class OrderService extends AbstractHelper
      */
     public function getMerchantTradeNo($orderId, $prefix = '')
     {
-        $MerchantTradeNo = $prefix . $orderId . 'SN' . (string) time() ;
-        return substr($MerchantTradeNo, 0, 20);
+        $merchantTradeNo = $prefix . substr(str_pad($orderId, 8, '0', STR_PAD_LEFT), 0, 8) . 'SN' . substr(hash('sha256', (string) time()), -5) ;
+        return substr($merchantTradeNo, 0, 20);
     }
 
     /**
-     * 還原 magento 原始訂單編號
+     * 利用Payment MerchantTradeNo取得訂單資訊
      * @param  string  $merchantTradeNo
-     * @param  string  $prefix
-     * @return int     $orderId
+     * @return array
      */
-    public function resetMerchantTradeNoToOrderId($merchantTradeNo, $prefix = '')
+    public function getOrderIdByPaymentMerchantTradeNo($merchantTradeNo)
     {
-        // 移除訂單編號前綴
-        if ($prefix !== '' && $prefix != NULL) {
-            $pos = strpos($merchantTradeNo, $prefix);
-            if ($pos !== false && $pos === 0) {
-                $merchantTradeNo = substr($merchantTradeNo, strlen($prefix));
-            }
+        $info = [];
+
+        $orderModel = $this->_orderFactory->create();
+
+        $collection =  $orderModel
+                     ->getCollection()
+                     ->addFieldToFilter('ecpay_payment_merchant_trade_no', ['eq' => $merchantTradeNo])
+                     ->setOrder('entity_id','DESC')
+                     ->setCurPage(1)
+                     ->setPageSize(1);
+
+        foreach($collection as $item){
+            $info = $item->getData() ;
         }
 
-        // 移除連接字串'SN'
-        $pos = strpos($merchantTradeNo, 'SN');
-        $orderId = substr($merchantTradeNo, 0, $pos);
-
-        return (int) $orderId;
+        return $info;
     }
 
     /**
@@ -128,11 +134,20 @@ class OrderService extends AbstractHelper
     /**
      * 取得訂單
      * @param  string  $orderId
+     * @param  int     $type
      * @return Order
      */
-    public function getOrder($orderId)
+    public function getOrder($orderId, $type = 0)
     {
-        $order = $this->_orderInterface->loadByIncrementId($orderId);
+        if ($type === 0) {
+            // Get order by entity id
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $order = $objectManager->create('\Magento\Sales\Model\OrderRepository')->get($orderId);
+        } else {
+            // Get order by increment id
+            $order = $this->_orderInterface->loadByIncrementId($orderId);
+        }
+
         return $order;
     }
 

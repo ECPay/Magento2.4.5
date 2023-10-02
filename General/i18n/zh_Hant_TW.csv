@@ -25,7 +25,7 @@
 "Enable ECPay shipping method","啟用綠界物流"
 "Enable ECPay invoice method","啟用綠界電子發票"
 "Order no prefix","訂單編號前綴"
-"Only letters and numbers allowed allowed.","僅允許英文與數字。"
+"Only a maximum of 5-character letters and numbers are allowed.","僅允許最多5碼英文與數字。"
 "Display order item name","綠界訂單顯示商品名稱"
 "ECPay sandbox","啟用測試模式"
 "MerchantID","商店代號"
@@ -122,6 +122,7 @@
 
 "Invalid number of periods.","請選擇期數"
 
+"Payment failed.","交易失敗"
 "Thank you for your purchase!","感謝您的購買!"
 "Order Information","訂單資訊"
 "Payment Information","付款資訊"

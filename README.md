@@ -21,9 +21,9 @@ Magento2.4 綠界科技金流、物流、電子發票模組
 
 支援版本
 -----------------
-| Magento |
-| :-----: |
-|  2.4.3-p3  |
+| Magento | PHP |
+| :-----: | :-----: |
+|  2.4.5-p3  |  8  |
 
 安裝前置作業
 -----------------
@@ -47,10 +47,10 @@ Magento2.4 綠界科技金流、物流、電子發票模組
     啟用套件
     ```
     php bin/magento module:enable Veriteworks_CookieFix
-    php bin/magento setup:upgrade ;
-    php bin/magento setup:di:compile ;
-    php bin/magento setup:static-content:deploy -f ;
-    php bin/magento cache:clean ;
+    php bin/magento setup:upgrade
+    php bin/magento setup:di:compile
+    php bin/magento setup:static-content:deploy -f
+    php bin/magento cache:clean
     ```
 
     * 安裝後至後台調整設定： `STORE` > `Configuration` > `GENERAL` > `Web` > `Default Cookie` `Settings` > `SameSite` > `None`
@@ -121,7 +121,7 @@ php bin/magento module:enable Ecpay_Invoice
 php bin/magento setup:upgrade
 php bin/magento setup:di:compile
 php bin/magento setup:static-content:deploy -f
-php bin/magento cache:clean ;  
+php bin/magento cache:clean
 ```
  * 執行後請確認檔案權限為Magento站台檔案擁有者。
 

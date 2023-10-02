@@ -54,8 +54,8 @@ class Shipping extends \Magento\Shipping\Model\Carrier\AbstractCarrier implement
         \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory,
         \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory,
         Data $directoryHelper,
-        MainService $mainService,
         LogisticService $logisticService,
+        MainService $mainService,
         array $data = []
     ) {
         $this->_directoryHelper = $directoryHelper;

@@ -1,9 +1,10 @@
 <?php
 namespace Ecpay\General\Block\Onepage;
 
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Psr\Log\LoggerInterface ;
+use Psr\Log\LoggerInterface;
 
 use Ecpay\General\Helper\Services\Common\EncryptionsService;
 use Ecpay\General\Helper\Services\Common\OrderService;
@@ -12,6 +13,8 @@ use Ecpay\General\Helper\Services\Config\LogisticService;
 
 class ThankYou extends Template
 {
+    protected $_checkoutSession;
+
     protected $_loggerInterface;
 
     protected $_encryptionsService;
@@ -22,12 +25,9 @@ class ThankYou extends Template
 
     protected $orderId;
 
-    /**
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param array $data
-     */
     public function __construct(
         Context $context,
+        CheckoutSession $checkoutSession,
         LoggerInterface $loggerInterface,
         EncryptionsService $encryptionsService,
         OrderService $orderService,
@@ -35,6 +35,7 @@ class ThankYou extends Template
         LogisticService $logisticService,
         array $data = []
     ) {
+        $this->_checkoutSession = $checkoutSession;
         $this->_loggerInterface = $loggerInterface;
 
         $this->_encryptionsService = $encryptionsService;
@@ -86,6 +87,7 @@ class ThankYou extends Template
             'real_order_id' => $this->_orderService->getRealOrderId($this->orderId),
             'created_at'    => $this->_orderService->getCreatedAt($this->orderId),
             'amount'        => $this->_orderService->getBaseGrandTotal($this->orderId),
+            'state'         => $this->_orderService->getOrderState($this->orderId),
         ];
     }
 
@@ -229,5 +231,16 @@ class ThankYou extends Template
         $this->_loggerInterface->debug('ThankYou Block orderId:'. print_r(intval($orderId),true));
 
         return intval($orderId);
+    }
+
+    /**
+     *  Payment custom error message
+     *
+     * @return string
+     */
+    public function getErrorMessage()
+    {
+        $error = $this->_checkoutSession->getErrorMessage();
+        return $error;
     }
 }

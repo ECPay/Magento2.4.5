@@ -39,7 +39,8 @@
 
                 <field id="payment_order_prefix" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Order no prefix</label>
-                    <comment>Only letters and numbers allowed allowed.</comment>
+                    <comment>Only a maximum of 5-character letters and numbers are allowed.</comment>
+                    <validate>validate-alphanum validate-length maximum-length-5</validate>
                 </field>
 
                 <field id="enabled_payment_disp_item_name" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -75,7 +76,8 @@
 
                 <field id="logistic_order_prefix" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Order no prefix</label>
-                    <comment>Only letters and numbers allowed allowed.</comment>
+                    <comment>Only a maximum of 5-character letters and numbers are allowed.</comment>
+                    <validate>validate-alphanum validate-length maximum-length-5</validate>
                 </field>
 
                 <field id="enabled_logistic_disp_item_name" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -143,7 +145,8 @@
 
                 <field id="invoice_order_prefix" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Order no prefix</label>
-                    <comment>Only letters and numbers allowed allowed.</comment>
+                    <comment>Only a maximum of 5-character letters and numbers are allowed.</comment>
+                    <validate>validate-alphanum validate-length maximum-length-5</validate>
                 </field>
 
                 <field id="enabled_invoice_auto" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
