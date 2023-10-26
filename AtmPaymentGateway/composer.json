@@ -1,14 +1,15 @@
 {
-    "name": "ecpay/module-atm-payment-gateway",
+    "name": "ecpay/magento2-module-atm-payment-gateway",
     "type": "magento2-module",
-    "version": "2.4.2308020",
+    "version": "2.4.2310030",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
     "description": "Demonstrates integration with payment gateway",
     "require": {
-        "php": "~7.4.0"
+        "php": "~8.1.0",
+        "ecpay/magento2-module-general": "^2.4"
     },
     "autoload": {
         "files": [ "registration.php" ],

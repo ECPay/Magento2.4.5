@@ -139,6 +139,11 @@ class PaymentResponse extends Action implements CsrfAwareActionInterface
 
                         // 異動旗標
                         $this->_orderService->setOrderData($orderId, 'ecpay_payment_complete_tag', 1) ;
+
+                        // 紀錄TWQR行動支付交易編號
+                        if (isset($paymentInfo['TWQRTradeNo']) && $paymentInfo['TWQRTradeNo'] != '') {
+                            $this->_orderService->setOrderCommentForBack($orderId, __('ECpay TWQR Trade No : ') . $paymentInfo['TWQRTradeNo']);
+                        }
                     } else {
                         // 模擬付款，僅更新備註
                         $this->_orderService->setOrderCommentForBack($orderId, __('Simulate paid, update the note only.'));
