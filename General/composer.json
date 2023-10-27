@@ -1,7 +1,7 @@
 {
     "name": "ecpay/magento2-module-general",
     "type": "magento2-module",
-    "version": "2.4.2310030",
+    "version": "2.4.2310270",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
