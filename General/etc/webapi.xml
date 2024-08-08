@@ -45,6 +45,34 @@
 
 
     
+    <route method="POST" url="/V1/ecpay_general/invoice/check_barcode">
+        <service class="Ecpay\General\Api\InvoiceInterface" method="checkBarcode"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route method="POST" url="/V1/ecpay_general/invoice/check_love_code">
+        <service class="Ecpay\General\Api\InvoiceInterface" method="checkLoveCode"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route method="POST" url="/V1/ecpay_general/invoice/check_citizen_digital_certificate">
+        <service class="Ecpay\General\Api\InvoiceInterface" method="checkCitizenDigitalCertificate"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route method="POST" url="/V1/ecpay_general/invoice/check_business_number">
+        <service class="Ecpay\General\Api\InvoiceInterface" method="checkBusinessNumber"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
     <route method="POST" url="/V1/ecpay_general/invoice/create_invoice">
         <service class="Ecpay\General\Api\InvoiceInterface" method="createInvoice"/>
         <resources>

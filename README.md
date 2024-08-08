@@ -23,7 +23,7 @@ Magento2.4 綠界科技金流、物流、電子發票模組
 -----------------
 | Magento | PHP |
 | :-----: | :-----: |
-|  2.4.5-p3  |  8  |
+|  2.4.5-p3  |  8.1  |
 
 安裝前置作業
 -----------------
@@ -104,6 +104,7 @@ php bin/magento module:enable Ecpay_CreditInstallmentPaymentGateway
 php bin/magento module:enable Ecpay_CreditPaymentGateway
 php bin/magento module:enable Ecpay_CvsPaymentGateway
 php bin/magento module:enable Ecpay_WebatmPaymentGateway
+php bin/magento module:enable Ecpay_TwqrPaymentGateway
 
 php bin/magento module:enable Ecpay_LogisticCsvFamily
 php bin/magento module:enable Ecpay_LogisticCsvHilife

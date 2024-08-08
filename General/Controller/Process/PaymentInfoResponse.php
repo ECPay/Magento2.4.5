@@ -103,7 +103,7 @@ class PaymentInfoResponse extends Action implements CsrfAwareActionInterface
 
             // 取出 KEY IV MID
             $accountInfo = $this->_paymentService->getStageAccount();
-            if (!$paymentInfo['MerchantID'] == $accountInfo['MerchantId']) {
+            if ($paymentInfo['MerchantID'] != $accountInfo['MerchantId']) {
                 $accountInfo = [
                     'HashKey' => $this->_mainService->getPaymentConfig('payment_hashkey'),
                     'HashIv'  => $this->_mainService->getPaymentConfig('payment_hashiv'),
@@ -115,6 +115,9 @@ class PaymentInfoResponse extends Action implements CsrfAwareActionInterface
             $checkMacValue = $this->_paymentService->checkMacValue($accountInfo, $paymentInfo);
             $orderCurrencyCode = $this->_orderService->getOrderCurrencyCode($orderId);
             $orderTotal = (!$orderCurrencyCode) ? $this->_orderService->getGrandTotal($orderId) : $this->_orderService->getBaseGrandTotal($orderId);
+            // 符合AIO金額無條件進位到整數
+            $orderTotal = (int)ceil($orderTotal);
+
             if (!$this->_paymentService->validAmount($paymentInfo['TradeAmt'], $orderTotal) || !$checkMacValue) {
                 $this->_loggerInterface->debug('PaymentInfoResponse $paymentInfo.TradeAmt:'. print_r($paymentInfo['TradeAmt'], true));
                 $this->_loggerInterface->debug('PaymentInfoResponse $orderTotal:'. print_r($orderTotal, true));
@@ -147,25 +150,27 @@ class PaymentInfoResponse extends Action implements CsrfAwareActionInterface
                         // 寄送付款資訊信件
                         // 組合信件內容參數
                         $paymentType = $this->_paymentService->getPaymentMethod($paymentInfo['PaymentType']);
-                        $templateValues = [
-                            'real_order_id'        => $this->_orderService->getRealOrderId($orderId),
-                            'created_at_formatted' => $this->_orderService->getCreatedAtFormatted($orderId, 2),
-                            'payment_type'         => $paymentType,
-                            'total_amount'         => intval($this->_orderService->getGrandTotal($orderId)),
-                            'payment_info'         => $this->_paymentService->getPaymentInfoTemplateValues($paymentInfo),
-                        ];
-                        $this->_loggerInterface->debug('PaymentInfoResponse $templateValues:'. print_r($templateValues, true));
-
-                        // 組合信件格式 包含寄件人、收件人、信件內容
-                        $paymentMethod = strtolower($paymentType);
-                        $mailData = [
-                            'sender_name'     => MailService::DEFAULT_SEND_NAME,
-                            'sender_email'    => MailService::DEFAULT_SEND_EMAIL,
-                            'template_id'     => 'ecpay_payment_info_' . $paymentMethod . '_template',
-                            'template_values' => $templateValues,
-                            'receiver'        => $this->_orderService->getCustomerEmail($orderId),
-                        ];
-                        $this->_paymentService->sendMail($mailData);
+                        if ($paymentType != 'BNPL') {
+                            $templateValues = [
+                                'real_order_id'        => $this->_orderService->getRealOrderId($orderId),
+                                'created_at_formatted' => $this->_orderService->getCreatedAtFormatted($orderId, 2),
+                                'payment_type'         => $paymentType,
+                                'total_amount'         => intval($this->_orderService->getGrandTotal($orderId)),
+                                'payment_info'         => $this->_paymentService->getPaymentInfoTemplateValues($paymentInfo),
+                            ];
+                            $this->_loggerInterface->debug('PaymentInfoResponse $templateValues:'. print_r($templateValues, true));
+    
+                            // 組合信件格式 包含寄件人、收件人、信件內容
+                            $paymentMethod = strtolower($paymentType);
+                            $mailData = [
+                                'sender_name'     => MailService::DEFAULT_SEND_NAME,
+                                'sender_email'    => MailService::DEFAULT_SEND_EMAIL,
+                                'template_id'     => 'ecpay_payment_info_' . $paymentMethod . '_template',
+                                'template_values' => $templateValues,
+                                'receiver'        => $this->_orderService->getCustomerEmail($orderId),
+                            ];
+                            $this->_paymentService->sendMail($mailData);
+                        }
                     } else {
                         // 更新訂單狀態
                         $this->_orderService->setOrderState($orderId, Order::STATE_CANCELED);
@@ -205,24 +210,31 @@ class PaymentInfoResponse extends Action implements CsrfAwareActionInterface
             'custom_field2'     => $response['CustomField2'],
             'custom_field3'     => $response['CustomField3'],
             'custom_field4'     => $response['CustomField4'],
-            'expire_date'       => $response['ExpireDate'],
         ];
 
         $paymentMethod = $this->_paymentService->getPaymentMethod($response['PaymentType']);
         switch($paymentMethod) {
             case 'ATM':
                 $extension = [
-                    'bank_code'  => $response['BankCode'],
-                    'vaccount'   => $response['vAccount'],
+                    'expire_date' => $response['ExpireDate'],
+                    'bank_code'   => $response['BankCode'],
+                    'vaccount'    => $response['vAccount'],
                 ];
                 break;
             case 'CVS':
             case 'BARCODE':
                 $extension = [
-                    'payment_no' => $response['PaymentNo'],
-                    'barcode1'   => $response['Barcode1'],
-                    'barcode2'   => $response['Barcode2'],
-                    'barcode3'   => $response['Barcode3'],
+                    'expire_date' => $response['ExpireDate'],
+                    'payment_no'  => $response['PaymentNo'],
+                    'barcode1'    => $response['Barcode1'],
+                    'barcode2'    => $response['Barcode2'],
+                    'barcode3'    => $response['Barcode3'],
+                ];
+                break;
+            case 'BNPL':
+                $extension = [
+                    'bnpl_trade_no' => $response['BNPLTradeNo'],
+                    'bnpl_installment'   => $response['BNPLInstallment'],
                 ];
                 break;
         }

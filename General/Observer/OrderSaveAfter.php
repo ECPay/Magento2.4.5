@@ -60,7 +60,7 @@ class OrderSaveAfter  implements ObserverInterface
     public function execute(Observer $observer) {
 
         $order = $observer->getEvent()->getOrder();
-        $orderId = $order->getId();
+        $orderId = intval($order->getId());
         $status = $order->getStatus() ;
 
         $this->_loggerInterface->debug('OrderSaveAfter Observer status:' . $status);

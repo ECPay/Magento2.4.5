@@ -3,6 +3,7 @@ namespace Ecpay\General\Controller\Api;
 
 use Psr\Log\LoggerInterface ;
 use Magento\Framework\UrlInterface;
+use Magento\Framework\Webapi\Exception;
 
 use Ecpay\General\Model\EcpayInvoice;
 use Ecpay\General\Helper\Services\Common\EncryptionsService;
@@ -56,7 +57,197 @@ class Invoice {
         $this->_generalHelper = $generalHelper;
         
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function checkBarcode($barcode)
+    {
+        // 手機條碼格式驗證
+        if (!preg_match('/^\/{1}[0-9a-zA-Z+-.]{7}$/', $barcode)) {
+            throw new Exception(__('code_1008'), '1008');
+        }
+
+        // 取出是否為測試模式
+        $invoiceStage = $this->_mainService->getInvoiceConfig('enabled_invoice_stage');
+        $this->_loggerInterface->debug('getInvoiceAccountInfo invoiceStage:' . print_r($invoiceStage, true));
+
+        // 取得發票會員資訊
+        $accountInfo = $this->getInvoiceAccountInfo($invoiceStage);
+
+        $factory = new Factory([
+            'hashKey'   => $accountInfo['HashKey'],
+            'hashIv'    => $accountInfo['HashIv'],
+        ]);
+
+        $postService = $factory->create('PostWithAesJsonResponseService');
+
+        // 取出 URL
+        $apiUrl = $this->_invoiceService->getApiUrl('check_barcode', $invoiceStage);
+        $this->_loggerInterface->debug('checkBarcode apiUrl:'. print_r($apiUrl, true));
+
+        // 組合送綠界格式
+        $data = [
+            'MerchantID' 	=> $accountInfo['MerchantId'],
+            'BarCode' 		=> $barcode,
+        ];
+
+        $input = [
+            'MerchantID' => $accountInfo['MerchantId'],
+            'RqHeader' => [
+                'Timestamp' => time(),
+                'Revision' => '3.0.0',
+            ],
+            'Data' => $data,
+        ];
+
+        $response = $postService->post($input, $apiUrl);
+
+        $this->_loggerInterface->debug('checkBarcode input:' . print_r($input, true));
+        $this->_loggerInterface->debug('checkBarcode response:' . print_r($response, true));
+
+        // 呼叫財政部API失敗
+        if (isset($response['Data']['RtnCode']) && $response['Data']['RtnCode'] == 9000001) {
+            $this->_loggerInterface->debug(__('code_1901'));
+            throw new Exception(__('code_1901'), '1901');
+        }
+
+        // 手機條碼驗證失敗
+        if (!isset($response['Data']['RtnCode']) || $response['Data']['RtnCode'] != 1 || $response['Data']['IsExist'] == 'N') {
+            throw new Exception(__('code_1009'), '1009');
+        }
+
+        // 轉為JSON格式
+        $responseArray = [
+            'code'  => '0999',
+            'msg'   => __('code_0999'),
+            'data'  => '',
+        ];
+
+        header("Content-Type: application/json; charset=utf-8");
+        $this->response = json_encode($responseArray);
+        print_r($this->response, false);
+        die();
+    }
    
+    /**
+     * {@inheritdoc}
+     */
+    public function checkLoveCode($loveCode)
+    {
+        // 捐贈碼格式驗證
+        if (!preg_match('/^([xX]{1}[0-9]{2,6}|[0-9]{3,7})$/', $loveCode)) {
+            throw new Exception(__('code_1010'), '1010');
+        }
+
+        // 取出是否為測試模式
+        $invoiceStage = $this->_mainService->getInvoiceConfig('enabled_invoice_stage');
+        $this->_loggerInterface->debug('invalidInvoice invoiceStage:' . print_r($invoiceStage, true));
+
+        // 取得發票會員資訊
+        $accountInfo = $this->getInvoiceAccountInfo($invoiceStage);
+
+        $factory = new Factory([
+            'hashKey'   => $accountInfo['HashKey'],
+            'hashIv'    => $accountInfo['HashIv'],
+        ]);
+
+        $postService = $factory->create('PostWithAesJsonResponseService');
+
+        // 取出 URL
+        $apiUrl = $this->_invoiceService->getApiUrl('check_love_code', $invoiceStage);
+        $this->_loggerInterface->debug('checkLoveCode apiUrl:'. print_r($apiUrl, true));
+
+        // 組合送綠界格式
+        $data = [
+            'MerchantID' 	=> $accountInfo['MerchantId'],
+            'LoveCode' 		=> $loveCode,
+        ];
+
+        $input = [
+            'MerchantID' => $accountInfo['MerchantId'],
+            'RqHeader' => [
+                'Timestamp' => time(),
+                'Revision' => '3.0.0',
+            ],
+            'Data' => $data,
+        ];
+
+        $response = $postService->post($input, $apiUrl);
+
+        $this->_loggerInterface->debug('checkLoveCode input:' . print_r($input, true));
+        $this->_loggerInterface->debug('checkLoveCode response:' . print_r($response, true));
+
+        // 呼叫財政部API失敗
+        if (isset($response['Data']['RtnCode']) && $response['Data']['RtnCode'] == 9000001) {
+            $this->_loggerInterface->debug(__('code_1901'));
+            throw new Exception(__('code_1901'), '1901');
+        }
+
+        // 捐贈碼驗證失敗
+        if (!isset($response['Data']['RtnCode']) || $response['Data']['RtnCode'] != 1 || $response['Data']['IsExist'] == 'N') {
+            throw new Exception(__('code_1011'), '1011');
+        }
+
+        $responseArray = [
+            'code'  => '0999',
+            'msg'   => __('code_0999'),
+            'data'  => '',
+        ];
+
+        // 轉為JSON格式
+        header("Content-Type: application/json; charset=utf-8");
+        $this->response = json_encode($responseArray);
+        print_r($this->response, false);
+        die();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function checkCitizenDigitalCertificate($carrierNumber)
+    {
+        // 自然人憑證格式驗證
+        if (!preg_match('/^[a-zA-Z]{2}\d{14}$/', $carrierNumber)) {
+            throw new Exception(__('code_1012'), '1012');
+        }
+
+        $responseArray = [
+            'code'  => '0999',
+            'msg'   => __('code_0999'),
+            'data'  => '',
+        ];
+
+        // 轉為JSON格式
+        header("Content-Type: application/json; charset=utf-8");
+        $this->response = json_encode($responseArray);
+        print_r($this->response, false);
+        die();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function checkBusinessNumber($businessNumber)
+    {
+        // 統一編號格式驗證
+        if (!preg_match('/^[0-9]{8}$/', $businessNumber)) {
+            throw new Exception(__('code_1013'), '1013');
+        }
+
+        $responseArray = [
+            'code'  => '0999',
+            'msg'   => __('code_0999'),
+            'data'  => '',
+        ];
+
+        // 轉為JSON格式
+        header("Content-Type: application/json; charset=utf-8");
+        $this->response = json_encode($responseArray);
+        print_r($this->response, false);
+        die();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -468,5 +659,37 @@ class Invoice {
         $this->response = json_encode($responseArray);
         print_r($this->response, false);
         die();
+    }
+
+    /**
+     * @return array $accountInfo
+     */
+    protected function getInvoiceAccountInfo($invoiceStage)
+    {
+        if ($invoiceStage == 1) {
+
+            // 取出 KEY IV MID (測試模式)
+            $accountInfo = $this->_invoiceService->getStageAccount();
+            $this->_loggerInterface->debug('getInvoiceAccountInfo accountInfo:' . print_r($accountInfo, true));
+
+        } else {
+
+            // 取出 KEY IV MID (正式模式)
+            $invoiceMerchantId = $this->_mainService->getInvoiceConfig('invoice_mid');
+            $invoiceHashKey    = $this->_mainService->getInvoiceConfig('invoice_hashkey');
+            $invoiceHashIv     = $this->_mainService->getInvoiceConfig('invoice_hashiv');
+
+            $this->_loggerInterface->debug('getInvoiceAccountInfo invoiceMerchantId:' . print_r($invoiceMerchantId, true));
+            $this->_loggerInterface->debug('getInvoiceAccountInfo invoiceHashKey:' . print_r($invoiceHashKey, true));
+            $this->_loggerInterface->debug('getInvoiceAccountInfo invoiceHashIv:' . print_r($invoiceHashIv, true));
+
+            $accountInfo = [
+                'MerchantId' => $invoiceMerchantId,
+                'HashKey'    => $invoiceHashKey,
+                'HashIv'     => $invoiceHashIv,
+            ];
+        }
+
+        return $accountInfo;
     }
 }

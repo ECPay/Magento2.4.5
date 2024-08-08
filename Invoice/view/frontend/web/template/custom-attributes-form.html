@@ -1,4 +1,5 @@
 <div class="step-title" data-role="title" data-bind="i18n: 'Ecpay Invoice Infomation'">Ecpay Invoice Infomation</div>
+
 <form  id="ecpay-invoice-form" class="form form-shipping-address">
     <div class="fieldset">
         <!-- ko foreach: getRegion('custom-checkout-form-fields') -->
@@ -33,18 +34,18 @@
             </select>
         </div>
 
-        <div class="field _required" style="margin: 0 0 20px;" data-bind="visible: showCustomerCompany">
+        <div class="field _required" style="margin: 0 0 20px;" data-bind="visible: showCustomerCompany" id="ecpay_invoice_customer_company_div">
             <label class="label">
                 <span data-bind="i18n: 'Company Name'"></span>
             </label>
-            <input type="text" class="control" name="ecpay_invoice_customer_company" id="ecpay_invoice_customer_company" data-bind="value: customer_company">
+            <input type="text" class="control" name="ecpay_invoice_customer_company" id="ecpay_invoice_customer_company" data-bind="value: customer_company, valueUpdate: 'afterkeydown'">
             <div class="field-error" id="customer_company_error"></div>
         </div>
         <div class="field _required" style="margin: 0 0 20px;" data-bind="visible: showCustomerIdentifier">
             <label class="label">
                 <span data-bind="i18n: 'Uniform Numbers'">Uniform Numbers</span>
             </label>
-            <input type="text" class="control" name="ecpay_invoice_customer_identifier" id="ecpay_invoice_customer_identifier" data-bind="value: customer_identifier">
+            <input type="text" class="control" name="ecpay_invoice_customer_identifier" id="ecpay_invoice_customer_identifier" data-bind="value: customer_identifier, valueUpdate: 'afterkeydown'">
             <div class="field-error" id="customer_identifier_error"></div>
         </div>
 
@@ -53,7 +54,7 @@
                 <span data-bind="i18n: 'Donation Code'">Donation Code</span>
             </label>
 
-            <input type="text" class="control" name="ecpay_invoice_love_code" id="ecpay_invoice_love_code" data-bind="value: love_code">
+            <input type="text" class="control" name="ecpay_invoice_love_code" id="ecpay_invoice_love_code" data-bind="value: love_code, valueUpdate: 'afterkeydown'">
             <div class="field-error" id="love_code_error"></div>
         </div>
 
@@ -61,7 +62,7 @@
             <label class="label">
                 <span data-bind="i18n: 'Carrier Code'">Carrier Code</span>
             </label>
-            <input type="text" class="control" name="ecpay_invoice_carruer_num" id="ecpay_invoice_carruer_num" data-bind="value: carruer_num">
+            <input type="text" class="control" name="ecpay_invoice_carruer_num" id="ecpay_invoice_carruer_num" data-bind="value: carruer_num, valueUpdate: 'afterkeydown'">
             <div class="field-error" id="carruer_num_error"></div>
         </div>
     </div>

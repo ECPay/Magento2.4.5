@@ -338,7 +338,26 @@ class InvoiceService extends AbstractHelper
 
                 case EcpayInvoice::ECPAY_INVOICE_TYPE_C:
                     $this->_logger->debug('InvoiceService ecpayInvoiceType:公司');
-                    $data['Print'] = '1';
+
+                    switch ($ecpayInvoiceCarruerType) {
+                        case '1':
+                            $data['CarrierType'] = '1';
+                        break;
+
+                        case '2':
+                            $data['CarrierType'] = '2';
+                            $data['CarrierNum'] = $ecpayInvoiceCarruerNum;
+                        break;
+
+                        case '3':
+                            $data['CarrierType'] = '3';
+                            $data['CarrierNum'] = $ecpayInvoiceCarruerNum;
+                        break;
+
+                        default:
+                            $data['Print'] = '1';
+                    }
+                    
                     $data['CustomerIdentifier'] = $ecpayInvoiceCustomerIdentifier;
                     $data['CustomerName'] = $ecpayInvoiceCustomerCompany;
 

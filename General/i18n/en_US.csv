@@ -8,6 +8,13 @@
 "code_1005","Invoice Doesn't Exist"
 "code_1006","Invoice Invalid Fail"
 "code_1007","Invoice CancelDelayIssue Fail"
+"code_1008","Invalid phone barcode"
+"code_1009","Please Check phone barcode"
+"code_1010","Invalid Donate number"
+"code_1011","Please Check Donate number"
+"code_1012","Invalid Citizen Digital Certificate"
+"code_1013","Invalid Business number"
+"code_1901","Ministry of Finance system is currently under maintenance, unable to verify the carrier. Please choose another invoice mode."
 
 "code_2003","Logistic Module Not Enable"
 "code_2004","Not Ecpay Logistic"
@@ -50,6 +57,8 @@
 "ECPay Cvs Gateway","ECPay Cvs Gateway"
 "ECPay Barcode Gateway","ECPay Barcode Gateway"
 "ECPay Applepay Gateway","ECPay Applepay Gateway"
+"ECPay TWQR Gateway","ECPay TWQR Gateway"
+"ECPay BNPL Gateway","ECPay BNPL Gateway"
 
 "ECPay CVS 7-ELEVEN","ECPay CVS 7-ELEVEN"
 "ECPay CVS Family","ECPay CVS Family"
@@ -106,6 +115,7 @@
 "Allowable payment deadline from 1 day to 30 days (The default is 7 days).","Allowable payment deadline from 1 day to 30 days (The default is 7 days)."
 "The default is 3 days.","The default is 3 days.",
 "The default is 7 days.","The default is 7 days."
+"Credit installment","Credit installment"
 "Number of periods","Number of periods"
 "-- Choose a selection --","-- Choose a selection --"
 "※ To use the Dream Installment service, the transaction amount must be at least NT$20,000.","※ To use the Dream Installment service, the transaction amount must be at least NT$20,000."
@@ -178,3 +188,6 @@
 "Print Logistic","Print Logistic"
 
 "The requested Payment Method is not available.","The requested Payment Method is not available."
+"ECpay TWQR Trade No : ","ECpay TWQR Trade No : "
+"Getting Code Result : (%s)%s, BNPL Trade No : %s, BNPL Installment : %s","Getting Code Result : (%s)%s, BNPL Trade No : %s, BNPL Installment : %s"
+

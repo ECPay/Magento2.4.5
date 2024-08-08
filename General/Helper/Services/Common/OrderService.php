@@ -15,6 +15,7 @@ use Magento\Shipping\Model\ShipmentNotifier;
 
 use Ecpay\General\Model\EcpayLogisticFactory;
 use Ecpay\General\Model\EcpayPaymentInfoFactory;
+use Ecpay\General\Helper\Services\Config\PaymentService;
 
 class OrderService extends AbstractHelper
 {
@@ -30,6 +31,8 @@ class OrderService extends AbstractHelper
     protected $_orderFactory;
     protected $_shipmentNotifier;
 
+    protected $_paymentService;
+
     public function __construct(
         InvoiceService $invoiceService,
         Transaction $transaction,
@@ -40,7 +43,8 @@ class OrderService extends AbstractHelper
         CollectionFactory $orderCollectionFactory,
         Order $convertOrder,
         OrderFactory $orderFactory,
-        ShipmentNotifier $shipmentNotifier
+        ShipmentNotifier $shipmentNotifier,
+        PaymentService $paymentService
     )
     {
         $this->_loggerInterface = $loggerInterface;
@@ -54,6 +58,8 @@ class OrderService extends AbstractHelper
         $this->_convertOrder = $convertOrder;
         $this->_orderFactory = $orderFactory;
         $this->_shipmentNotifier = $shipmentNotifier;
+
+        $this->_paymentService = $paymentService;
     }
 
     /**
@@ -996,6 +1002,90 @@ class OrderService extends AbstractHelper
         }
 
         return $info;
+    }
+
+    /**
+     * 取得綠界金流資訊內容
+     * @param  string  $orderId
+     * @param  string  $paymentMethod
+     * @return array   $paymentInfo
+     */
+    public function getEcpayPaymentInfoContent($orderId, $paymentMethod)
+    {
+        $paymentInfo = [] ;
+
+        // 繳費資訊
+        $paymentInfoData = $this->getEcpayPaymentInfo($orderId);
+        if (!empty($paymentInfoData)) {
+            switch ($paymentMethod) {
+                case 'ecpay_atm_gateway':
+                    $paymentInfo = [
+                        [
+                            'key' => __('Bank code'),
+                            'val' => $paymentInfoData['bank_code']
+                        ],
+                        [
+                            'key' => __('ATM No'),
+                            'val' => implode(' ', str_split($paymentInfoData['vaccount'], 4))
+                        ],
+                        [
+                            'key' => __('Payment deadline'),
+                            'val' => $paymentInfoData['expire_date']
+                        ],
+                    ];
+                    break;
+                case 'ecpay_cvs_gateway':
+                    $paymentInfo = [
+                        [
+                            'key' => __('CVS No'),
+                            'val' => $paymentInfoData['payment_no']
+                        ],
+                        [
+                            'key' => __('Payment deadline'),
+                            'val' => $paymentInfoData['expire_date']
+                        ],
+                    ];
+                    break;
+                case 'ecpay_barcode_gateway':
+                    $paymentInfo = [
+                        [
+                            'key' => __('Barcode one'),
+                            'val' => $paymentInfoData['barcode1']
+                        ],
+                        [
+                            'key' => __('Barcode two'),
+                            'val' => $paymentInfoData['barcode2']
+                        ],
+                        [
+                            'key' => __('Barcode three'),
+                            'val' => $paymentInfoData['barcode3']
+                        ],
+                        [
+                            'key' => __('Payment deadline'),
+                            'val' => $paymentInfoData['expire_date']
+                        ],
+                    ];
+                    break;
+            }
+        }
+
+        // 其他資訊
+        $additionalInformation = $this->getAdditionalInformation($orderId);
+        if (!empty($additionalInformation)) {
+            switch ($paymentMethod) {
+                case 'ecpay_credit_installment_gateway':
+                    $creditInstallment = isset($additionalInformation['ecpay_credit_installment']) ? $this->_paymentService->getCreditInstallmentName($additionalInformation['ecpay_credit_installment']) : '';
+                    $paymentInfo = [
+                        [
+                            'key' => __('Credit installment'),
+                            'val' => $creditInstallment
+                        ],
+                    ];
+                    break;
+            }
+        }
+
+        return $paymentInfo;
     }
 
     /**

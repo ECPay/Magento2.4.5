@@ -50,6 +50,16 @@ class PaymentService extends AbstractHelper
     public const APPLEPAY = 'ApplePay';
 
     /**
+     * TWQR
+     */
+    public const TWQR = 'TWQR';
+
+    /**
+     * BNPL
+     */
+    public const BNPL = 'BNPL';
+
+    /**
      * 付款成功代碼
      */
     public const PAYMENT_SUCCESS_CODE = 1;
@@ -76,6 +86,7 @@ class PaymentService extends AbstractHelper
      */
     private $paymentInfoSuccessCodes = array(
         'ATM'     => 2,
+        'BNPL'    => 2,
         'CVS'     => 10100073,
         'BARCODE' => 10100073,
     );
@@ -193,6 +204,12 @@ class PaymentService extends AbstractHelper
                 $send['StoreExpireDate'] = ($expireDate === '') ? 7 : $expireDate;
                 $send['PaymentInfoURL'] = $input['paymentInfoUrl'];
                 break;
+            case self::BNPL:
+                $send['PaymentInfoURL'] = $input['paymentInfoUrl'];
+                break;
+            case self::TWQR:
+                $send['NeedExtraPaidInfo'] = 'Y';
+                break;
         }
         return $send;
     }
@@ -296,6 +313,12 @@ class PaymentService extends AbstractHelper
             case 'ecpay_applepay_gateway':
                 $choosePayment = self::APPLEPAY ;
                 break;
+            case 'ecpay_twqr_gateway':
+                $choosePayment = self::TWQR ;
+                break;
+            case 'ecpay_bnpl_gateway':
+                $choosePayment = self::BNPL ;
+                break;
         }
 
         return $choosePayment ;
@@ -358,7 +381,9 @@ class PaymentService extends AbstractHelper
             'ecpay_credit_installment_gateway',
             'ecpay_cvs_gateway',
             'ecpay_barcode_gateway',
-            'ecpay_applepay_gateway'
+            'ecpay_applepay_gateway',
+            'ecpay_twqr_gateway',
+            'ecpay_bnpl_gateway'
         ];
     }
 
@@ -388,6 +413,9 @@ class PaymentService extends AbstractHelper
             'Barcode1',
             'Barcode2',
             'Barcode3',
+            'Barcode3',
+            'BNPLTradeNo',
+            'BNPLInstallment'
         );
         $inputs = $this->only($feedback, $list);
 
@@ -423,6 +451,15 @@ class PaymentService extends AbstractHelper
                     $inputs['Barcode3']
                 );
                 break;
+            case 'BNPL':
+                return sprintf(
+                    $pattern,
+                    $inputs['RtnCode'],
+                    $inputs['RtnMsg'],
+                    $inputs['BNPLTradeNo'],
+                    $inputs['BNPLInstallment'],
+                );
+                break;
             default:
                 break;
         }
@@ -451,6 +488,9 @@ class PaymentService extends AbstractHelper
                     break;
                 case self::BARCODE:
                     $pattern = __('Getting Code Result : (%s)%s, Payment Deadline : %s, BARCODE 1 : %s, BARCODE 2 : %s, BARCODE 3 : %s');
+                    break;
+                case self::BNPL:
+                    $pattern = __('Getting Code Result : (%s)%s, BNPL Trade No : %s, BNPL Installment : %s');
                     break;
             }
 
@@ -680,6 +720,12 @@ class PaymentService extends AbstractHelper
                 break;
             case 'applepay':
                 $sdkPayment = self::APPLEPAY;
+                break;
+            case 'twqr':
+                $sdkPayment = self::TWQR;
+                break;
+            case 'bnpl':
+                $sdkPayment = self::BNPL;
                 break;
             default:
                 $sdkPayment = '';

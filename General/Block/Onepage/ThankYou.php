@@ -109,61 +109,7 @@ class ThankYou extends Template
         // 判斷是否為綠界金流
         $paymentInfo = [];
         if ($isEcpayPayment) {
-            $paymentInfoData = $this->_orderService->getEcpayPaymentInfo($this->orderId);
-            $this->_loggerInterface->debug('ThankYou Block paymentInfoData:'. print_r($paymentInfoData,true));
-
-            if (!empty($paymentInfoData)) {
-                switch ($paymentMethod) {
-                    case 'ecpay_atm_gateway':
-                        $paymentInfo = [
-                            [
-                                'key' => __('Bank code'),
-                                'val' => $paymentInfoData['bank_code']
-                            ],
-                            [
-                                'key' => __('ATM No'),
-                                'val' => implode(' ', str_split($paymentInfoData['vaccount'], 4))
-                            ],
-                            [
-                                'key' => __('Payment deadline'),
-                                'val' => $paymentInfoData['expire_date']
-                            ],
-                        ];
-                        break;
-                    case 'ecpay_cvs_gateway':
-                        $paymentInfo = [
-                            [
-                                'key' => __('CVS No'),
-                                'val' => $paymentInfoData['payment_no']
-                            ],
-                            [
-                                'key' => __('Payment deadline'),
-                                'val' => $paymentInfoData['expire_date']
-                            ],
-                        ];
-                        break;
-                    case 'ecpay_barcode_gateway':
-                        $paymentInfo = [
-                            [
-                                'key' => __('Barcode one'),
-                                'val' => $paymentInfoData['barcode1']
-                            ],
-                            [
-                                'key' => __('Barcode two'),
-                                'val' => $paymentInfoData['barcode2']
-                            ],
-                            [
-                                'key' => __('Barcode three'),
-                                'val' => $paymentInfoData['barcode3']
-                            ],
-                            [
-                                'key' => __('Payment deadline'),
-                                'val' => $paymentInfoData['expire_date']
-                            ],
-                        ];
-                        break;
-                }
-            }
+            $paymentInfo = $this->_orderService->getEcpayPaymentInfoContent($this->orderId, $paymentMethod);
         }
         $this->_loggerInterface->debug('ThankYou Block paymentInfo:'. print_r($paymentInfo,true));
 
