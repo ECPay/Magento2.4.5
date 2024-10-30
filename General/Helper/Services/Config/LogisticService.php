@@ -34,7 +34,7 @@ class LogisticService extends AbstractHelper
 
         OrderService $orderService,
         MainService $mainService,
-        Data $directoryHelper
+        Data $directoryHelper,
     )
     {
         $this->_urlInterface = $urlInterface;
@@ -822,7 +822,8 @@ class LogisticService extends AbstractHelper
             'ServerReplyURL'    => $input['serverReplyURL'],
         ];
 
-        echo $autoSubmitFormService->generate($input, $apiUrl);
+        $form = $autoSubmitFormService->generate($input, $apiUrl);
+        return $form;
     }
 
     /**
@@ -1138,7 +1139,7 @@ class LogisticService extends AbstractHelper
 
                 return [
                     'code' => '0999',
-                    'data' => json_encode($dataResponse)
+                    'data' => $dataResponse
                 ];
             } else {
 

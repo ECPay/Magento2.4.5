@@ -27,9 +27,11 @@ define([
             },
             showMessage: function (style_class, message) {
                 $('#invoice-msg').removeClass('success', 'error');
-                $('#invoice-msg').addClass(style_class);
-                $('#invoice-msg').show();
-                $('#invoice-msg-content').text(message)
+                if (message != '' && message != undefined) {
+                    $('#invoice-msg').addClass(style_class);
+                    $('#invoice-msg').show();
+                    $('#invoice-msg-content').text(message)
+                }
             },
             invoiceAjax: function(url_path, type, method) {
                 var data = {
@@ -65,10 +67,11 @@ define([
                     success: function(response) {
                         $('body').trigger('processStop');
 
-                        if (response.code == '0999') {
+                        let res_data = JSON.parse(response);
+                        if (res_data.code == '0999') {
                             switch (method) {
                                 case 'status':
-                                    if (response.data == '1') {
+                                    if (res_data.data == '1') {
                                         $('#invoice_info').show();
                                         invoiceFunction.showBtn('#create_invoice_btn', 'hide');
                                         invoiceFunction.showBtn('#invalid_invoice_btn');
@@ -81,12 +84,13 @@ define([
                                     }
                                     break;
                                 case 'create':
+                                    var data = res_data.data;
                                     $('#invoice_info').show();
                                     invoiceFunction.showBtn('#invalid_invoice_btn');
                                     invoiceFunction.showBtn('#create_invoice_btn', 'hide');
 
-                                    invoiceFunction.appendInvoiceData(JSON.parse(response.data))
-                                    invoiceFunction.showMessage('success', response.msg)
+                                    invoiceFunction.appendInvoiceData(data)
+                                    invoiceFunction.showMessage('success', res_data.msg)
                                     break;
                                 case 'invalid':
                                     $('#invoice_info').hide();
@@ -100,11 +104,11 @@ define([
                                     $('#invoice_od_sob').text('')
                                     $('#invoice_type').text('')
                                     $('#invoice_codes').empty();
-                                    invoiceFunction.showMessage('success', response.msg)
+                                    invoiceFunction.showMessage('success', res_data.msg)
                                     break;
                             }
                         }
-                        else invoiceFunction.showMessage('error', response.msg)
+                        else invoiceFunction.showMessage('error', res_data.msg)
                     }
                 });
             },

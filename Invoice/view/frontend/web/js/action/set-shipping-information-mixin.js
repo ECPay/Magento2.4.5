@@ -128,8 +128,9 @@ define([
                         addErrorMsg(field, errorMsg.message + ' (' + errorMsg.code + ')')
                     },
                     success: function(response) {
-                        if (response.code != '0999') {
-                            addErrorMsg(field, response.msg + ' (' + response.code + ')')
+                        let res_data = JSON.parse(response);
+                        if (res_data.code != '0999') {
+                            addErrorMsg(field, res_data.msg + ' (' + res_data.code + ')')
                         }
                     }
                 });

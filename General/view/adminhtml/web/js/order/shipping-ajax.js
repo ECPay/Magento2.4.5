@@ -25,9 +25,12 @@ define([
             },
             showMessage: function (style_class, message) {
                 $('#shipping-msg').removeClass('success', 'error');
-                $('#shipping-msg').addClass(style_class);
-                $('#shipping-msg').show();
-                $('#shipping-msg-content').text(message);
+                
+                if (message != '' && message != undefined) {
+                    $('#shipping-msg').addClass(style_class);
+                    $('#shipping-msg-content').text(message);
+                    $('#shipping-msg').show();
+                }
             },
             shippingAjax: function(url_path, type, method) {
                 var data = {
@@ -60,12 +63,13 @@ define([
                     },
                     success: function(response) {
                         $('body').trigger('processStop');
-                        if (response.code == '0999') {
+                        let res_data = JSON.parse(response);
+                        if (res_data.code == '0999') {
                             switch (method) {
                                 case 'shipment':
-                                    let response_data = JSON.parse(response.data);
-                                    if (response_data.shipping_method == 'ecpaylogisticcsvunimart_ecpaylogisticcsvunimart'|| response_data.shipping_method == 'ecpaylogisticcsvfamily_ecpaylogisticcsvfamily'|| response_data.shipping_method == 'ecpaylogisticcsvhilife_ecpaylogisticcsvhilife'|| response_data.shipping_method == 'ecpaylogisticcsvokmart_ecpaylogisticcsvokmart'|| response_data.shipping_method == 'ecpaylogistichomepost_ecpaylogistichomepost'|| response_data.shipping_method == 'ecpaylogistichometcat_ecpaylogistichometcat') {
-                                        shippingFunction.shippingMethod = response_data.shipping_method;
+                                    var data = res_data.data;
+                                    if (data.shipping_method == 'ecpaylogisticcsvunimart_ecpaylogisticcsvunimart'|| data.shipping_method == 'ecpaylogisticcsvfamily_ecpaylogisticcsvfamily'|| data.shipping_method == 'ecpaylogisticcsvhilife_ecpaylogisticcsvhilife'|| data.shipping_method == 'ecpaylogisticcsvokmart_ecpaylogisticcsvokmart'|| data.shipping_method == 'ecpaylogistichomepost_ecpaylogistichomepost'|| data.shipping_method == 'ecpaylogistichometcat_ecpaylogistichometcat') {
+                                        shippingFunction.shippingMethod = data.shipping_method;
                                         shippingFunction.getShippingTag();
                                     }
                                     else {
@@ -73,7 +77,7 @@ define([
                                     }
                                     break;
                                 case 'status':
-                                    if (response.data == '1') {
+                                    if (res_data.data == '1') {
                                         shippingFunction.showBtn('#print_shipping_btn');
                                     } else {
                                         shippingFunction.showBtn('#create_shipping_btn');
@@ -84,20 +88,21 @@ define([
                                     shippingFunction.appendShippingData(config.shippingData);
                                     break;
                                 case 'create':
+                                    var data = res_data.data;
                                     shippingFunction.showBtn('#create_shipping_btn', 'hide');
                                     shippingFunction.showBtn('#change_store_btn', 'hide');
                                     shippingFunction.showBtn('#print_shipping_btn');
-                                    shippingFunction.appendShippingData(JSON.parse(response.data));
-                                    shippingFunction.showMessage('success', response.msg);
+                                    shippingFunction.appendShippingData(data);
+                                    shippingFunction.showMessage('success', res_data.msg);
                                     break;
                                 case 'print':
-                                    var data = JSON.parse(response.data);
+                                    var data = res_data.data;
                                     $('#print_form').empty();
                                     $('#print_form').append(data.form_print);
                                     $('#ecpay_print').submit();
                                     break; 
                                 case 'store':
-                                    var data = JSON.parse(response.data);
+                                    var data = res_data.data;
                                     $('#map_form').empty();
                                     var form = data.form_map;
                                     form = form.replace('target="_self"', 'target="print_popup" onsubmit="window.open(\'about:blank\',\'print_popup\',\'width=1000,height=800\');"')
@@ -106,7 +111,7 @@ define([
                                     break;
                             }
                         }
-                        else shippingFunction.showMessage('error', response.msg);
+                        else shippingFunction.showMessage('error', res_data.msg);
                     }
                 });
             },

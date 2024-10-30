@@ -192,3 +192,5 @@
 "ECpay TWQR Trade No : ","綠界TWQR行動支付交易編號 : "
 "Getting Code Result : (%s)%s, BNPL Trade No : %s, BNPL Installment : %s","取號結果 : (%s)%s, 綠界無卡分期交易編號 : %s, 綠界無卡分期期數 : %s"
 
+"Redirect To ECPay","綠界轉導中"
+

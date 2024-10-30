@@ -8,10 +8,12 @@ use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\UrlInterface;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Psr\Log\LoggerInterface ;
 
 use Ecpay\General\Helper\Services\Common\EncryptionsService;
 use Ecpay\General\Helper\Services\Common\OrderService;
+use Ecpay\General\Helper\Services\Common\ToEcpayService;
 use Ecpay\General\Helper\Services\Config\MainService;
 use Ecpay\General\Helper\Services\Config\InvoiceService;
 use Ecpay\General\Helper\Services\Config\LogisticService;
@@ -26,10 +28,12 @@ class LogisticMapResponse extends Action implements CsrfAwareActionInterface
 
     protected $_encryptionsService;
     protected $_orderService;
+    protected $_toEcpayService;
     protected $_mainService;
     protected $_invoiceService;
     protected $_logisticService;
     protected $_paymentService;
+    protected $_checkoutSession;
 
     public function __construct(
         Context $context,
@@ -40,10 +44,12 @@ class LogisticMapResponse extends Action implements CsrfAwareActionInterface
 
         EncryptionsService $encryptionsService,
         OrderService $orderService,
+        ToEcpayService $toEcpayService,
         MainService $mainService,
         InvoiceService $invoiceService,
         LogisticService $logisticService,
-        PaymentService $paymentService
+        PaymentService $paymentService,
+        CheckoutSession $checkoutSession
     )
     {
         $this->_requestInterface = $requestInterface;
@@ -53,10 +59,12 @@ class LogisticMapResponse extends Action implements CsrfAwareActionInterface
 
         $this->_encryptionsService = $encryptionsService;
         $this->_orderService = $orderService;
+        $this->_toEcpayService = $toEcpayService;
         $this->_mainService = $mainService;
         $this->_invoiceService = $invoiceService;
         $this->_logisticService = $logisticService;
         $this->_paymentService = $paymentService;
+        $this->_checkoutSession = $checkoutSession;
 
         return parent::__construct($context);
     }
@@ -114,6 +122,7 @@ class LogisticMapResponse extends Action implements CsrfAwareActionInterface
                 $dbWrite->closeConnection();
             }
         }
+        $this->_checkoutSession->unsMapFormHtml();
 
         // 判斷是否為綠界金流
         $paymentMethod = $this->_orderService->getPaymentMethod($orderId);
@@ -121,9 +130,9 @@ class LogisticMapResponse extends Action implements CsrfAwareActionInterface
 
         if ($this->_paymentService->isEcpayPayment($paymentMethod)){
 
-            // YES 轉導到綠界金流執行程序組合FORM(帶ORDER_ID走) -> PaymentToEcpay
-            $redirectUrl = $this->_urlInterface->getUrl('ecpaygeneral/Process/PaymentToEcpay');
-            $redirectUrl = $redirectUrl . '?id='. $enctyOrderId ;
+            // 轉導到綠界金流執行程序組合FORM(帶ORDER_ID走) 
+            $redirectUrl = $this->_urlInterface->getUrl('ecpaygeneral/Page/RedirectToEcpay');
+            $redirectUrl = $redirectUrl . '?id='. $enctyOrderId . '&type=payment';
 
         } else {
 
@@ -133,10 +142,7 @@ class LogisticMapResponse extends Action implements CsrfAwareActionInterface
         }
 
         $this->_loggerInterface->debug('MapResponse $redirectUrl:'. print_r($redirectUrl,true));
-
         $this->_responseFactory->create()->setRedirect($redirectUrl)->sendResponse();
-
-        exit();
     }
 
     /**

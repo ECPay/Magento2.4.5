@@ -144,7 +144,8 @@ class PaymentService extends AbstractHelper
 
         $input = $this->checkoutPrepare($input);
 
-        return $autoSubmitFormService->generate($input, $apiUrl);
+        $form = $autoSubmitFormService->generate($input, $apiUrl);
+        return $form;
     }
 
     /**

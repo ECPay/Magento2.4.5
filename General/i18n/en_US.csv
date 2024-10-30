@@ -191,3 +191,5 @@
 "ECpay TWQR Trade No : ","ECpay TWQR Trade No : "
 "Getting Code Result : (%s)%s, BNPL Trade No : %s, BNPL Installment : %s","Getting Code Result : (%s)%s, BNPL Trade No : %s, BNPL Installment : %s"
 
+"Redirect To ECPay","Redirect To ECPay"
+

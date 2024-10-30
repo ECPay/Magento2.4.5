@@ -13,4 +13,5 @@
     <type name="Magento\Payment\Model\MethodList">
         <plugin name="ecpayDisablePayment" type="Ecpay\General\Plugin\Model\Method\MethodAvailable" disabled="false" />
     </type>
+
 </config>

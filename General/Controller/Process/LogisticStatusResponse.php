@@ -110,7 +110,8 @@ class LogisticStatusResponse extends Action implements CsrfAwareActionInterface
             ]);
             
             $checkoutResponse = $factory->create(VerifiedArrayResponse::class);
-            $resposeInfo = $checkoutResponse->get($_POST);
+            $postData = $this->_requestInterface->getPostValue();
+            $resposeInfo = $checkoutResponse->get($postData);
             $this->_loggerInterface->debug('LogisticStatusResponse resposeInfo:'. print_r($resposeInfo,true));
 
             if(isset($resposeInfo['RtnCode'])){
@@ -129,15 +130,13 @@ class LogisticStatusResponse extends Action implements CsrfAwareActionInterface
 
                     $this->_orderService->setOrderCommentForBack($orderId, $comment, $status, $isVisibleOnFront);
 
-                    echo '1|OK';
+                    return '1|OK';
                 }  
             }
 
         } catch (RtnException $e) {
             $this->_loggerInterface->debug('LogisticStatusResponse resposeInfo:'. print_r('(' . $e->getCode() . ')' . $e->getMessage()));
         }
-
-        exit();
     }
 
     /**

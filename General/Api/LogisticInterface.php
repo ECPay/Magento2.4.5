@@ -1,6 +1,7 @@
 <?php 
 namespace Ecpay\General\Api;
  
+use Magento\Framework\Controller\Result\Json;
  
 interface LogisticInterface {
 
@@ -8,7 +9,7 @@ interface LogisticInterface {
      * changeStore
      * @param string $orderId
      * @param string $protectCode
-     * @return []
+     * @return Json
      */
     public function changeStore($orderId, $protectCode);
 
@@ -16,7 +17,7 @@ interface LogisticInterface {
      * createOrder
      * @param string $orderId
      * @param string $protectCode
-     * @return []
+     * @return Json
      */
     public function createOrder($orderId, $protectCode);
 
@@ -24,13 +25,13 @@ interface LogisticInterface {
      * printOrder
      * @param string $orderId
      * @param string $protectCode
-     * @return []
+     * @return Json
      */
     public function printOrder($orderId, $protectCode);
 
     /**
      * getLogisticMainConfig
-     * @return []
+     * @return Json
      */
     public function getLogisticMainConfig();
 
@@ -38,7 +39,7 @@ interface LogisticInterface {
      * getShippingMethod
      * @param string $orderId
      * @param string $protectCode
-     * @return []
+     * @return Json
      */
     public function getShippingMethod($orderId, $protectCode);
 
@@ -46,7 +47,7 @@ interface LogisticInterface {
      * getShippingTag
      * @param string $orderId
      * @param string $protectCode
-     * @return []
+     * @return Json
      */
     public function getShippingTag($orderId, $protectCode);
 

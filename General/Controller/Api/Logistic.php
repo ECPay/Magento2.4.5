@@ -1,6 +1,7 @@
 <?php
 namespace Ecpay\General\Controller\Api;
 
+use Exception;
 use Psr\Log\LoggerInterface ;
 use Magento\Framework\UrlInterface;
 
@@ -86,9 +87,7 @@ class Logistic {
             ];
 
             header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
 
         }
 
@@ -117,9 +116,7 @@ class Logistic {
             ];
 
             header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
         }
 
         // 物流單建立狀態
@@ -137,9 +134,7 @@ class Logistic {
             ];
 
             header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
         }
 
         // 取出訂單資訊
@@ -168,9 +163,7 @@ class Logistic {
             ];
 
             header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
         }
 
         // 取出是否為測試模式
@@ -260,13 +253,11 @@ class Logistic {
         $responseArray = [
             'code'  => '0999',
             'msg'   => __('code_0999'),
-            'data'  => json_encode($dataResponse),
+            'data'  => $dataResponse,
         ];
 
         header("Content-Type: application/json; charset=utf-8");
-        $this->response = json_encode($responseArray);
-        print_r($this->response, false);
-        die();
+        return json_encode($responseArray);
     }
 
     /**
@@ -294,9 +285,7 @@ class Logistic {
             ];
 
             header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
         }
 
         // 解密訂單編號
@@ -344,9 +333,7 @@ class Logistic {
         }
 
         header("Content-Type: application/json; charset=utf-8");
-        $this->response = json_encode($responseArray);
-        print_r($this->response, false);
-        die();
+        return json_encode($responseArray);
     }
 
     /**
@@ -374,9 +361,7 @@ class Logistic {
             ];
 
             header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
 
         }
 
@@ -405,9 +390,7 @@ class Logistic {
             ];
 
             header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
         }
 
         // 物流單建立狀態
@@ -425,9 +408,7 @@ class Logistic {
             ];
 
             header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
         }
 
         // 取出訂單資訊
@@ -446,9 +427,7 @@ class Logistic {
             ];
 
             header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
         }
 
         // 取出是否為測試模式
@@ -536,21 +515,19 @@ class Logistic {
             ] ;
 
         } catch (RtnException $e) {
-            echo wp_kses_post( '(' . $e->getCode() . ')' . $e->getMessage() ) . PHP_EOL;
+            $this->_loggerInterface->debug('printOrder :'. print_r('(' . $e->getCode() . ')' . $e->getMessage()));
         }
 
         // 往前端送
         $responseArray = [
             'code'  => '0999',
             'msg'   => __('code_0999'),
-            'data'  => json_encode($dataResponse),
+            'data'  => $dataResponse,
         ];
 
         // 轉為JSON格式
         header("Content-Type: application/json; charset=utf-8");
-        $this->response = json_encode($responseArray);
-        print_r($this->response, false);
-        die();
+        return json_encode($responseArray);
     }
 
     /**
@@ -577,9 +554,7 @@ class Logistic {
 
         // 轉為JSON格式
         header("Content-Type: application/json; charset=utf-8");
-        $this->response = json_encode($responseArray);
-        print_r($this->response, false);
-        die();
+        return json_encode($responseArray);
     }
 
     /**
@@ -607,9 +582,7 @@ class Logistic {
             ];
 
             header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
 
         }
 
@@ -638,9 +611,7 @@ class Logistic {
             ];
 
             header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
         }
 
         // 物流方式
@@ -656,13 +627,11 @@ class Logistic {
         $responseArray = [
             'code'  => '0999',
             'msg'   => __('code_0999'),
-            'data'  => json_encode($dataResponse),
+            'data'  => $dataResponse,
         ];
 
         header("Content-Type: application/json; charset=utf-8");
-        $this->response = json_encode($responseArray);
-        print_r($this->response, false);
-        die();
+        return json_encode($responseArray);
     }
 
     /**
@@ -690,9 +659,7 @@ class Logistic {
             ];
 
             header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
 
         }
 
@@ -721,9 +688,7 @@ class Logistic {
             ];
 
             header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
         }
 
         // 物流單建立狀態
@@ -738,9 +703,7 @@ class Logistic {
         ];
 
         header("Content-Type: application/json; charset=utf-8");
-        $this->response = json_encode($responseArray);
-        print_r($this->response, false);
-        die();
+        return json_encode($responseArray);
     }
 
 

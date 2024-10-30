@@ -444,7 +444,7 @@ class InvoiceService extends AbstractHelper
                     return [
                         'code' => '0999',
                         'msg'   => __('code_0999'),
-                        'data' => json_encode($dataResponse)
+                        'data' => $dataResponse
                     ];
 
                 }
@@ -531,7 +531,7 @@ class InvoiceService extends AbstractHelper
                     return [
                         'code' => '0999',
                         'msg'   => __('code_0999'),
-                        'data' => json_encode($dataResponse)
+                        'data' => $dataResponse
                     ];
                 }
                 else {

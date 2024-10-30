@@ -87,9 +87,10 @@ class LogisticChangeStoreResponse extends Action implements CsrfAwareActionInter
 
         // 目前僅支援一張物流單
         if($ecpayShippingTag == 1){
-
-            echo '訂單已經建立，不允許修改門市';
-            die();
+            $response = $this->_responseFactory->create();
+            $response->setHttpResponseCode(200); // 設置 HTTP 狀態碼
+            $response->setBody('訂單已經建立，不允許修改門市'); // 設置回應的內容
+            return $response->sendResponse();
         }
 
         // 更新資料庫
@@ -109,27 +110,24 @@ class LogisticChangeStoreResponse extends Action implements CsrfAwareActionInter
             
             // 備註
             $comment = '後台更改門市資訊(成功)，超商店舖名稱：'. $CVSStoreName . '，店舖編號：' . $CVSStoreID . '，店舖地址：' . $CVSAddress; 
-
-            echo '更改門市成功，請重新整理訂單頁面<br>';
-            echo '超商名稱：' . $CVSStoreName . '<br>';
-            echo '超商編號：' . $CVSStoreID . '<br>';
-            echo '超商地址：' . $CVSAddress . '<br>';
-
+            $response = $this->_responseFactory->create();
+            $response->setHttpResponseCode(200); // 設置 HTTP 狀態碼
+            $response->setBody('更改門市成功，請重新整理訂單頁面<br>超商名稱：' . $CVSStoreName . '<br>超商編號：' . $CVSStoreID . '<br>超商地址：' . $CVSAddress . '<br>'); // 設置回應的內容
+            return $response->sendResponse();
 
         } else {
-
             // 備註
             $comment = '後台更改門市資訊(失敗):門市不存在' ; 
-
-            echo '門市不存在';
+            $response = $this->_responseFactory->create();
+            $response->setHttpResponseCode(200); // 設置 HTTP 狀態碼
+            $response->setBody('門市不存在'); // 設置回應的內容
+            return $response->sendResponse();
         }
         
         $status = false ;
         $isVisibleOnFront = false ;
 
         $this->_orderService->setOrderCommentForBack($orderId, $comment, $status, $isVisibleOnFront) ;
-
-        exit();
     }
 
     /**

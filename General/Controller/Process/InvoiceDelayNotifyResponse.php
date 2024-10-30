@@ -98,15 +98,12 @@ class InvoiceDelayNotifyResponse extends Action implements CsrfAwareActionInterf
                 $this->_orderService->setOrderCommentForBack($orderId, $comment, $status, $isVisibleOnFront) ;
 
                 // 回傳綠界成功狀態
-                echo '1|OK';  
+                return '1|OK';  
             }
             
         } else {
-
-            echo '0|Fail';
+            return '0|Fail';
         }
-
-        exit();
     }
 
     /**

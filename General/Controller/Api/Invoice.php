@@ -55,7 +55,6 @@ class Invoice {
         $this->_paymentService = $paymentService;
         
         $this->_generalHelper = $generalHelper;
-        
     }
 
     /**
@@ -124,10 +123,7 @@ class Invoice {
             'data'  => '',
         ];
 
-        header("Content-Type: application/json; charset=utf-8");
-        $this->response = json_encode($responseArray);
-        print_r($this->response, false);
-        die();
+        return json_encode($responseArray);
     }
    
     /**
@@ -195,11 +191,7 @@ class Invoice {
             'data'  => '',
         ];
 
-        // 轉為JSON格式
-        header("Content-Type: application/json; charset=utf-8");
-        $this->response = json_encode($responseArray);
-        print_r($this->response, false);
-        die();
+        return json_encode($responseArray);
     }
 
     /**
@@ -218,11 +210,7 @@ class Invoice {
             'data'  => '',
         ];
 
-        // 轉為JSON格式
-        header("Content-Type: application/json; charset=utf-8");
-        $this->response = json_encode($responseArray);
-        print_r($this->response, false);
-        die();
+        return json_encode($responseArray);
     }
 
     /**
@@ -241,11 +229,7 @@ class Invoice {
             'data'  => '',
         ];
 
-        // 轉為JSON格式
-        header("Content-Type: application/json; charset=utf-8");
-        $this->response = json_encode($responseArray);
-        print_r($this->response, false);
-        die();
+        return json_encode($responseArray);
     }
 
     /**
@@ -283,10 +267,7 @@ class Invoice {
         }
         $this->_loggerInterface->debug('createInvoice responseArray:'. print_r($responseArray,true));
         
-        header("Content-Type: application/json; charset=utf-8");
-        $this->response = json_encode($responseArray);
-        print_r($this->response, false);
-        die();
+        return json_encode($responseArray);
     }
 
     /**
@@ -324,10 +305,7 @@ class Invoice {
                 'data'  => '',
             ];
 
-            header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
         }
 
         // 判斷是否有發票要作廢
@@ -437,10 +415,7 @@ class Invoice {
                         'data'  => '',
                     ];
 
-                    header("Content-Type: application/json; charset=utf-8");
-                    $this->response = json_encode($responseArray);
-                    print_r($this->response, false);
-                    die();
+                    return json_encode($responseArray);
                 }
                 else {
 
@@ -458,10 +433,7 @@ class Invoice {
                         'data'  => '',
                     ];
 
-                    header("Content-Type: application/json; charset=utf-8");
-                    $this->response = json_encode($responseArray);
-                    print_r($this->response, false);
-                    die();
+                    return json_encode($responseArray);
                 }
 
             } else if($ecpayInvoiceIssueType == 2 && empty($ecpayInvoiceNumber)){
@@ -528,10 +500,7 @@ class Invoice {
                         'data'  => '',
                     ];
 
-                    header("Content-Type: application/json; charset=utf-8");
-                    $this->response = json_encode($responseArray);
-                    print_r($this->response, false);
-                    die();
+                    return json_encode($responseArray);
                 }
                 else {
 
@@ -549,10 +518,7 @@ class Invoice {
                         'data'  => '',
                     ];
 
-                    header("Content-Type: application/json; charset=utf-8");
-                    $this->response = json_encode($responseArray);
-                    print_r($this->response, false);
-                    die();
+                    return json_encode($responseArray);
                 }
 
             }
@@ -566,10 +532,7 @@ class Invoice {
                 'data'  => '',
             ];
 
-            header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
         }
     }
 
@@ -608,10 +571,7 @@ class Invoice {
                 'data'  => '',
             ];
 
-            header("Content-Type: application/json; charset=utf-8");
-            $this->response = json_encode($responseArray);
-            print_r($this->response, false);
-            die();
+            return json_encode($responseArray);
         }
 
         // 取出發票開立標籤
@@ -625,11 +585,7 @@ class Invoice {
             'data'  => $ecpayInvoiceTag,
         ];
 
-        // 轉為JSON格式
-        header("Content-Type: application/json; charset=utf-8");
-        $this->response = json_encode($responseArray);
-        print_r($this->response, false);
-        die();
+        return json_encode($responseArray);
     }
 
     /**
@@ -655,10 +611,7 @@ class Invoice {
         ];
 
         // 轉為JSON格式
-        header("Content-Type: application/json; charset=utf-8");
-        $this->response = json_encode($responseArray);
-        print_r($this->response, false);
-        die();
+        return json_encode($responseArray);
     }
 
     /**

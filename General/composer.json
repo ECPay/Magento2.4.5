@@ -1,14 +1,14 @@
 {
-    "name": "ecpay/magento2-module-general",
+    "name": "greenworld/magento2-module-general",
     "type": "magento2-module",
-    "version": "2.4.2310270",
+    "version": "2.4.2410290",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
     "require": {
-        "php": "~8.1.0",
-        "ecpay/sdk": "^1.2",
+        "php": "^8.1|^8.2",
+        "ecpay/sdk": "^1.3",
         "ecpay/magento2-module-invoice": "^2.4",
         "ecpay/magento2-module-applepay-payment-gateway": "^2.4",
         "ecpay/magento2-module-atm-payment-gateway": "^2.4",

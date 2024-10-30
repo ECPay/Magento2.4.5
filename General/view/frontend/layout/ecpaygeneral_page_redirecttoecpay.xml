@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Ecpay_General::css/onepage/ecpayform-block.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Ecpay\General\Block\Onepage\RedirectToEcpay" name="ecpay_form" template="Ecpay_General::ecpayform.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

@@ -103,7 +103,8 @@ class PaymentInfoResponse extends Action implements CsrfAwareActionInterface
 
             // 取出 KEY IV MID
             $accountInfo = $this->_paymentService->getStageAccount();
-            if (!$paymentInfo['MerchantID'] == $accountInfo['MerchantId']) {
+            $paymentStage = $this->_mainService->getPaymentConfig('enabled_payment_stage');
+            if ($paymentStage != 1) {
                 $accountInfo = [
                     'HashKey' => $this->_mainService->getPaymentConfig('payment_hashkey'),
                     'HashIv'  => $this->_mainService->getPaymentConfig('payment_hashiv'),
@@ -180,9 +181,7 @@ class PaymentInfoResponse extends Action implements CsrfAwareActionInterface
             }
         }
 
-        echo '1|OK' ;
-
-        exit();
+        return '1|OK';
     }
 
     /**

@@ -7,11 +7,13 @@ use Magento\Framework\UrlInterface;
 use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Checkout\Model\Session as CheckoutSession;
 
 use Ecpay\General\Model\EcpayInvoice;
 use Ecpay\General\Helper\Foundation\GeneralHelper;
 use Ecpay\General\Helper\Services\Common\EncryptionsService;
 use Ecpay\General\Helper\Services\Common\OrderService;
+use Ecpay\General\Helper\Services\Common\ToEcpayService;
 use Ecpay\General\Helper\Services\Config\MainService;
 use Ecpay\General\Helper\Services\Config\PaymentService;
 use Ecpay\General\Helper\Services\Config\LogisticService;
@@ -20,9 +22,11 @@ class RedirectToEcpay implements ObserverInterface
     protected $_loggerInterface;
     protected $_urlInterface;
     protected $_responseFactory;
+    protected $_checkoutSession;
 
     protected $_encryptionsService;
     protected $_orderService;
+    protected $_toEcpayService;
 
     protected $_mainService;
     protected $_paymentService;
@@ -34,8 +38,10 @@ class RedirectToEcpay implements ObserverInterface
         LoggerInterface $loggerInterface,
         UrlInterface $urlInterface,
         ResponseFactory $responseFactory,
+        CheckoutSession $checkoutSession,
         EncryptionsService $encryptionsService,
         OrderService $orderService,
+        ToEcpayService $toEcpayService,
         MainService $mainService,
         PaymentService $paymentService,
         LogisticService $logisticService,
@@ -44,12 +50,15 @@ class RedirectToEcpay implements ObserverInterface
         $this->_loggerInterface = $loggerInterface;
         $this->_urlInterface = $urlInterface;
         $this->_responseFactory = $responseFactory;
+        $this->_checkoutSession = $checkoutSession;
         $this->_encryptionsService = $encryptionsService;
         $this->_orderService = $orderService;
+        $this->_toEcpayService = $toEcpayService;
         $this->_mainService = $mainService;
         $this->_paymentService = $paymentService;
         $this->_logisticService = $logisticService;
         $this->_generalHelper = $generalHelper;
+
     }
 
     public function execute(Observer $observer)
@@ -97,29 +106,19 @@ class RedirectToEcpay implements ObserverInterface
         if ($isEcpayLogistic) {
 
             if ($cvsOrHomeCheck == 'cvs') {
-
-                // 超商取貨
-                // 轉導產生地圖FORM -> MapToEcpay.php
-                $redirectUrl = $this->_urlInterface->getUrl("ecpaygeneral/Process/LogisticMapToEcpay");
-                $redirectUrl = $redirectUrl . '?id='. $encOrderId ;
-
-                $this->_loggerInterface->debug('RedirectProcess Event $redirectUrl:'. print_r($redirectUrl,true));
-                $this->_responseFactory->create()->setRedirect($redirectUrl)->sendResponse();
+                // 超商取貨 轉導產生地圖 FORM
+                $this->redirectToEcpay($encOrderId, 'logistic');
 
             } elseif($cvsOrHomeCheck == 'home') {
-
-                // 宅配
-                // 判斷是否為綠界金流
-                if ($isEcpayPyment) {
-                    $this->paymentToEcpay($orderId);
-                }
+                // 宅配 判斷是否為綠界金流
+                if ($isEcpayPyment) $this->redirectToEcpay($encOrderId, 'payment');
             }
 
         } else {
 
             // 判斷是否為綠界金流
             if ($isEcpayPyment) {
-                $this->paymentToEcpay($orderId);
+                $this->redirectToEcpay($encOrderId, 'payment');
             } else {
                 // 判斷是否使用綠界發票
                 $invoiceType = $this->_orderService->getecpayInvoiceType($orderId);
@@ -145,18 +144,15 @@ class RedirectToEcpay implements ObserverInterface
     }
 
     /**
-     * 轉導到綠界AIO
+     * 轉導到綠界超商地圖或 AIO
      *
      * @return void
      */
-    private function paymentToEcpay(string $orderId)
+    private function redirectToEcpay(string $encOrderId, string $type)
     {
-        // 訂單編號加密
-        $encOrderId = $this->_encryptionsService->encrypt($orderId);
-
-        // 轉導到綠界金流執行程序組合FORM(帶ORDER_ID走) -> PaymentToEcpay.php
-        $redirectUrl = $this->_urlInterface->getUrl('ecpaygeneral/Process/PaymentToEcpay');
-        $redirectUrl = $redirectUrl . '?id='. $encOrderId ;
+        // 轉導到綠界金、物流，執行程序組合FORM(帶ORDER_ID走)
+        $redirectUrl = $this->_urlInterface->getUrl('ecpaygeneral/Page/RedirectToEcpay');
+        $redirectUrl = $redirectUrl . '?id='. $encOrderId . '&type=' . $type;
 
         $this->_loggerInterface->debug('RedirectProcess Event $redirectUrl:'. print_r($redirectUrl,true));
         $this->_responseFactory->create()->setRedirect($redirectUrl)->sendResponse();
