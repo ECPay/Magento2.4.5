@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <!-- ecpay_logistic -->
+    <table name="ecpay_logistic" resource="Ecpay_General::ecpay_logistic">
+        <!-- 添加欄位 -->
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        
+        <column xsi:type="int" name="order_id" comment="Order Id"/>
+        <column xsi:type="varchar" name="merchant_trade_no" length="255" comment="MerchantTradeNo"/>
+        <column xsi:type="int" name="rtn_code" comment="RtnCode"/>
+        <column xsi:type="varchar" name="rtn_msg" length="255" comment="RtnMsg"/>
+        <column xsi:type="varchar" name="all_pay_logistics_id" length="50" comment="AllPayLogisticsID"/>
+        <column xsi:type="varchar" name="logistics_type" length="50" comment="LogisticsType"/>
+        <column xsi:type="varchar" name="logistics_sub_type" length="50" comment="LogisticsSubType"/>
+        <column xsi:type="varchar" name="booking_note" length="50" comment="BookingNote"/>
+        <column xsi:type="varchar" name="cvs_payment_no" length="50" comment="CVSPaymentNo"/>
+        <column xsi:type="varchar" name="cvs_validation_no" length="50" comment="CVSValidationNo"/>
+        
+        <!-- 添加外鍵、索引等其他約束 -->
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+
+    <!-- sales_order -->
+    <table name="sales_order" resource="Ecpay_General::sales_order">
+        <!-- 添加 Logistic 欄位 -->
+        <column xsi:type="varchar" name="ecpay_logistic_cvs_store_id" length="10" comment="CVSStoreID" nullable="true"/>
+        <column xsi:type="varchar" name="ecpay_logistic_cvs_store_name" length="10" comment="CVSStoreName" nullable="true"/>
+        <column xsi:type="varchar" name="ecpay_logistic_cvs_store_address" length="60" comment="CVSAddress" nullable="true"/>
+        <column xsi:type="varchar" name="ecpay_logistic_cvs_store_telephone" length="20" comment="CVSTelephone" nullable="true"/>
+        <column xsi:type="int" name="ecpay_logistic_auto_tag" comment="Logistic Auto Tag" nullable="false" default="0"/>
+        <column xsi:type="int" name="ecpay_shipping_tag" comment="Shipping Tag" nullable="false" default="0"/>
+
+        <!-- 添加 Payment 欄位 -->
+        <column xsi:type="int" name="ecpay_payment_complete_tag" comment="Payment Complete Tag" nullable="false" default="0"/>
+        <column xsi:type="varchar" name="ecpay_payment_merchant_trade_no" length="255" comment="Payment Merchant Trade No" nullable="false" default=""/>
+    </table>
+
+     <!-- ecpay_payment_info -->
+    <table name="ecpay_payment_info" resource="Ecpay_General::ecpay_payment_info">
+        <!-- 添加欄位 -->
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        
+        <column xsi:type="int" name="order_id" comment="Order Id"/>
+        <column xsi:type="varchar" name="merchant_id" length="10" comment="MerchantID"/>
+        <column xsi:type="varchar" name="merchant_trade_no" length="255" comment="MerchantTradeNo"/>
+        <column xsi:type="varchar" name="store_id" length="10" comment="StoreID"/>
+        <column xsi:type="int" name="rtn_code" comment="RtnCode"/>
+        <column xsi:type="varchar" name="rtn_msg" length="255" comment="RtnMsg"/>
+        <column xsi:type="varchar" name="trade_no" length="255" comment="TradeNo"/>
+        <column xsi:type="int" name="trade_amt" comment="TradeAmt"/>
+        <column xsi:type="varchar" name="payment_type" length="50" comment="PaymentType"/>
+        <column xsi:type="varchar" name="trade_date" length="50" comment="TradeDate"/>
+        <column xsi:type="varchar" name="custom_field1" length="100" comment="CustomField1"/>
+        <column xsi:type="varchar" name="custom_field2" length="100" comment="CustomField2"/>
+        <column xsi:type="varchar" name="custom_field3" length="100" comment="CustomField3"/>
+        <column xsi:type="varchar" name="custom_field4" length="100" comment="CustomField4"/>
+        <column xsi:type="varchar" name="bank_code" length="50" comment="BankCode"/>
+        <column xsi:type="varchar" name="vaccount" length="50" comment="vAccount"/>
+        <column xsi:type="varchar" name="expire_date" length="100" comment="ExpireDate"/>
+        <column xsi:type="varchar" name="payment_no" length="20" comment="PaymentNo"/>
+        <column xsi:type="varchar" name="barcode1" length="50" comment="Barcode1"/>
+        <column xsi:type="varchar" name="barcode2" length="50" comment="Barcode2"/>
+        <column xsi:type="varchar" name="barcode3" length="50" comment="Barcode3"/>
+
+        <!-- 添加外鍵、索引等其他約束 -->
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+</schema>

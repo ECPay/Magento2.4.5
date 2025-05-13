@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="EcpayBasicTest">
+        <annotations>
+            <features value="Ecpay_General"/>
+            <stories value="Basic Functionality"/>
+            <title value="Basic Module Test"/>
+            <description value="Verify that the module is installed correctly"/>
+            <severity value="MINOR"/>
+            <group value="Ecpay_General"/>
+        </annotations>
+    </test>
+</tests>
