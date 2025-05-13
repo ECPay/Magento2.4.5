@@ -19,10 +19,10 @@ define([
             // 定義目前載具類型及選項
             this.currentCarruerType = ko.observable("Paper Invoice");
             this.carruerTypes = ko.observableArray([
-                { name: "Paper Invoice", value: "0", active: true },
-                { name: "Cloud Invoice", value: "1", active: true },
-                { name: "Natural Person Certificate", value: "2", active: true },
-                { name: "Mobile Barcode", value: "3", active: true }
+                { name: "Paper Invoice", value: "0", active: ko.observable(true) },
+                { name: "Cloud Invoice", value: "1", active: ko.observable(true) },
+                { name: "Natural Person Certificate", value: "2", active: ko.observable(true) },
+                { name: "Mobile Barcode", value: "3", active: ko.observable(true) }
             ])
 
             // 定義目前發票類型及選項
@@ -110,12 +110,19 @@ define([
                     // 重置載具選項、公司行號必填
                     $('#ecpay_invoice_carruer_type option:first').prop("selected", true)
                     $('#ecpay_invoice_customer_company_div').addClass('_required')
+
+                    // 關閉自然人憑證選項
+                    const option = this.carruerTypes().find(item => item.value == '2');
+                    if (option) option.active(false);
+
                     break;
+
                 case "d":
                     this.showLoveCode(true);
                     this.showCarruerType(false);
                     this.love_code(this.defaultLoveCode);
                     break;
+
                 default:
                     this.showCarruerType(true);
                     // 重置載具選項
@@ -138,6 +145,11 @@ define([
                 $("#ecpay_invoice_" + value).removeAttr("style");
                 $("#" + value + "_error").empty();
             })
+
+            // 開啟自然人憑證選項
+            const option = this.carruerTypes().find(item => item.value == '2');
+            if (option) option.active(true);
+
         },
         isLoggedIn: function () {
             return customer.isLoggedIn();

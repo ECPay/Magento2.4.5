@@ -1,7 +1,7 @@
 {
     "name": "ecpay/magento2-module-invoice",
     "type": "magento2-module",
-    "version": "2.4.2410290",
+    "version": "2.4.2411060",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
