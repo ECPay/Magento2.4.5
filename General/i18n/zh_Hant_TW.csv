@@ -59,6 +59,7 @@
 "ECPay Applepay Gateway","綠界金流 ApplePay"
 "ECPay TWQR Gateway","綠界金流 TWQR"
 "ECPay BNPL Gateway","綠界金流 BNPL"
+"ECPay WeiXin Gateway","綠界金流 微信支付"
 
 "ECPay CVS 7-ELEVEN","綠界物流 超商取貨 7-ELEVEN"
 "ECPay CVS Family","綠界物流 超商取貨 全家超商"

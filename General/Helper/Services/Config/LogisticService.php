@@ -767,11 +767,15 @@ class LogisticService extends AbstractHelper
 
     /**
      * 判斷是否為綠界物流
-     * @param  string $shippingMethod
+     * @param  string|null $shippingMethod
      * @return bool
      */
-    public function isEcpayLogistics(string $shippingMethod)
+    public function isEcpayLogistics(?string $shippingMethod)
     {
+        if (is_null($shippingMethod)) {
+            return false;
+        }
+
         return in_array($shippingMethod, $this->getEcpayAllLogistics());
     }
 

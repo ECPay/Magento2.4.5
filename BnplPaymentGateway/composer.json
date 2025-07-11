@@ -1,7 +1,7 @@
 {
-    "name": "ecpay/module-bnpl-payment-gateway",
+    "name": "ecpay/magento2-module-bnpl-payment-gateway",
     "type": "magento2-module",
-    "version": "2.4.2410290",
+    "version": "2.4.2505270",
     "license": [
         "OSL-3.0",
         "AFL-3.0"

@@ -1,7 +1,7 @@
 {
     "name": "greenworld/magento2-module-general",
     "type": "magento2-module",
-    "version": "2.4.2411050",
+    "version": "2.4.2505270",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
@@ -17,6 +17,9 @@
         "ecpay/magento2-module-credit-installment-payment-gateway": "^2.4",
         "ecpay/magento2-module-credit-payment-gateway": "^2.4",
         "ecpay/magento2-module-cvs-payment-gateway": "^2.4",
+        "ecpay/magento2-module-bnpl-payment-gateway": "^2.4",
+        "ecpay/magento2-module-twqr-payment-gateway": "^2.4",
+        "ecpay/magento2-module-weixin-payment-gateway": "^2.4",
         "ecpay/magento2-module-logistic-csv-family": "^2.4",
         "ecpay/magento2-module-logistic-csv-hilife": "^2.4",
         "ecpay/magento2-module-logistic-csv-okmart": "^2.4",

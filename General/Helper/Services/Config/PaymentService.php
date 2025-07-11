@@ -60,6 +60,11 @@ class PaymentService extends AbstractHelper
     public const BNPL = 'BNPL';
 
     /**
+     * WeiXin
+     */
+    public const WEIXIN = 'WeiXin';
+
+    /**
      * 付款成功代碼
      */
     public const PAYMENT_SUCCESS_CODE = 1;
@@ -170,10 +175,6 @@ class PaymentService extends AbstractHelper
             'ReturnURL'         => $input['returnUrl'],
             'ClientBackURL'     => $input['clientBackUrl'],
             'CustomField1'      => $input['enctyOrderId'],
-
-            // todo: 測試用，前景回傳結果
-            // 'OrderResultURL'    => $input['returnUrl'],
-            // 'ClientRedirectURL' => $input['paymentInfoUrl'],
         ];
 
         // Set the extend information
@@ -320,6 +321,9 @@ class PaymentService extends AbstractHelper
             case 'ecpay_bnpl_gateway':
                 $choosePayment = self::BNPL ;
                 break;
+            case 'ecpay_weixin_gateway':
+                $choosePayment = self::WEIXIN ;
+                break;
         }
 
         return $choosePayment ;
@@ -384,7 +388,8 @@ class PaymentService extends AbstractHelper
             'ecpay_barcode_gateway',
             'ecpay_applepay_gateway',
             'ecpay_twqr_gateway',
-            'ecpay_bnpl_gateway'
+            'ecpay_bnpl_gateway',
+            'ecpay_weixin_gateway'
         ];
     }
 
@@ -727,6 +732,9 @@ class PaymentService extends AbstractHelper
                 break;
             case 'bnpl':
                 $sdkPayment = self::BNPL;
+                break;
+            case 'weixin':
+                $sdkPayment = self::WEIXIN;
                 break;
             default:
                 $sdkPayment = '';
